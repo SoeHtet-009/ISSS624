@@ -1,0 +1,24 @@
+---
+title: "Hands-on Exercise 01 Data Wrangling with R"
+editor: visual
+---
+
+## Overview
+
+Hand-on exercise 1 teaches how to import and wrangle geospatial data using R packages.
+
+## Getting Started
+
+This is getting started paragraph
+
+## Importing Geospatial Data
+
+### Import polygon feature data
+
+```{r}
+pacman::p_load(sf,tidyverse)
+```
+
+```{r}
+mpsz = st_read(dsn="geospatial",layer="MP14_SUBZONE_WEB_PL")
+```
