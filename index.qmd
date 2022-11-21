@@ -2,4 +2,4 @@
 title: "ISSS624"
 ---
 
-Hello everyone, in this website, I will share with you my learning journey of geospatial analytics.
+Hello everyone, I will share with you my learning journey of geospatial analytics in this blog.

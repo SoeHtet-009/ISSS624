@@ -1,0 +1,406 @@
+---
+title: "In-Class Exercise 1"
+editor: visual
+---
+
+# 3 Spatial Weight And Application
+
+## 3.1 Overview
+
+In this hands-on exercise, you will learn how to compute spatial weights using R. By the end to this hands-on exercise, you will be able to:
+
+-   import geospatial data using appropriate function(s) of **sf** package,
+
+-   import csv file using appropriate function of **readr** package,
+
+-   perform relational join using appropriate join function of **dplyr** package,
+
+-   compute spatial weights using appropriate functions of **spdep** package, and
+
+-   calculate spatially lagged variables using appropriate functions of **spdep** package.
+
+## 3.2 Getting Started
+
+Two data sets will be used in this hands-on exercise, they are:
+
+-   Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.
+
+-   Hunan_2012.csv: This csv file contains selected Hunan\'s local development indicators in 2012.
+
+The code chunk below will install tidyverse and sf packages.
+
+```{r}
+pacman::p_load(tidyverse,sf,tmap)
+```
+
+## 3.3 Import geospatial data
+
+The code chunk below is used to import geospatial data to R.
+
+```{r}
+mpsz = st_read(dsn="geospatial",layer='MP14_SUBZONE_WEB_PL')
+```
+
+### 3.3.1 Importing and transforming into projected coordinate system
+
+```{r}
+preschool = st_read("geospatial/pre-schools-location-kml.kml") %>%
+  st_transform(crs=3414)
+```
+
+```{r}
+st_geometry(preschool)
+```
+
+```{r}
+pacman::p_load(spdep)
+hunan = st_read(dsn="data/geospatial",layer="Hunan")
+
+```
+
+```{r}
+hunan2012 <- read.csv("data/aspatial/Hunan_2012.csv")
+head(hunan2012,5)
+```
+
+## 3.4 Performing relational join
+
+The code chunk below is used to perform left join above two tables.
+
+```{r}
+hunan1 <- left_join(hunan,hunan2012)
+```
+
+## 3.5 Visualising Regional Development Indicators
+
+Now we are going to plot base map and choropleth map by using qtm() of tmap package.
+
+```{r}
+basemap <- tm_shape(hunan1) +
+  tm_polygons() +
+  tm_text("NAME_3", size=0.3)
+gdppc <- qtm(hunan1, "GDPPC")
+tmap_arrange(basemap, gdppc, asp=1, ncol=2)
+```
+
+## 3.6 Computing Contiguity Spatial Weight
+
+In this section, we will learn how to use poly2nb() of spdep package to compute continguity weight matrix for the study area.
+This function builds a neighbours list based on regions with contiguous boundaries.
+
+### 3.6.1 Computing Queen Contiguity Neighbours
+
+```{r}
+wm_q <- poly2nb(hunan1, queen=TRUE)
+summary(wm_q)
+```
+
+From the summary report, we can observe that polygon 85 has the most number of neighbours with 11 and polygon 30 and 65 have the least with 1 neighbour each.
+
+To find the neighbours of a polygon, we can use the code below.
+
+```{r}
+wm_q[[85]]
+```
+
+To find the name of county that belongs to the polygon number, the code below can be used.
+
+```{r}
+hunan1$County[85]
+```
+
+```{r}
+hunan1$County[wm_q[[85]]]
+```
+
+```{r}
+hunan1$GDPPC[wm_q[[85]]]
+```
+
+We can display the complete weight matrix by using str().
+
+```{r}
+str(wm_q)
+```
+
+### 3.6.2 Computing ROOK Contiguity Neighbours
+
+```{r}
+wm_r <- poly2nb(hunan, queen=FALSE)
+summary(wm_r)
+```
+
+### 3.6.3 Visualizing Contiguity Weights
+
+A connectivity graph takes a point and displays a line to each neighboring point. We are working with polygons at the moment, so we will need to get points in order to make our connectivity graphs. The most typically method for this will be polygon centroids. We will calculate these in the sf package before moving onto the graphs. Getting Latitude and Longitude of Polygon Centroids
+
+We will need points to associate with each polygon before we can make our connectivity graph. It will be a little more complicated than just running st_centroid on the sf object: us.bound. We need the coordinates in a separate data frame for this to work. To do this we will use a mapping function. The mapping function applies a given function to each element of a vector and returns a vector of the same length. Our input vector will be the geometry column of us.bound. Our function will be st_centroid. We will be using map_dbl variation of map from the purrr package. For more documentation, check out map documentation
+
+To get our longitude values we map the st_centroid function over the geometry column of us.bound and access the longitude value through double bracket notation \[\[\]\] and 1. This allows us to get only the longitude, which is the first value in each centroid.
+
+```{r}
+longitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
+latitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])
+coords <- cbind(longitude,latitude)
+
+```
+
+### 3.6.4 Plotting Queen Contiguity Based Neighbours Map
+
+```{r}
+plot(hunan$geometry, border="lightgrey")
+plot(wm_q, coords, pch = 19, cex = 0.6, add = TRUE, col= "red")
+```
+
+### 3.6.5 Plotting ROOK Contiguity Based Neighbours Map
+
+```{r}
+plot(hunan$geometry, border="lightgrey")
+plot(wm_r, coords, pch = 19, cex = 0.6, add = TRUE, col= "red")
+```
+
+### 3.6.6 Plotting Both Queen And ROOK Contiguity Based Neighbours Map
+
+```{r}
+par(mfrow=c(1,2))
+plot(hunan$geometry, border="lightgrey")
+plot(wm_q, coords, pch = 19, cex = 0.6, add = TRUE, col= "red", main="Queen Contiguity")
+plot(hunan$geometry, border="lightgrey")
+plot(wm_r, coords, pch = 19, cex = 0.6, add = TRUE, col = "red", main="Rook Contiguity")
+```
+
+## 3.7 Computing Distance Based Neighbours
+
+In this section, we will explore the use of knearneigh(), knn2nb() and nbdists() functions of spdep package for the computation of distance based neighbours.
+
+### 3.7.1 Determine The Cutoff Distance
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords, longlat = TRUE))
+summary(k1dists)
+```
+
+The summary report shows that the largest first nearest neighbour distance is 61.79 km, so using this as the upper threshold gives certainty that all units will have at least one neighbour.
+
+### 3.7.2 Computing Fixed Distance Weight Matrix
+
+```{r}
+wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
+wm_d62
+```
+
+We reveal the complete neighbour list by using str() function.
+
+```{r}
+str(wm_d62)
+```
+
+Another way to display the structure of the weight matrix is to combine [*table()*](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/table) and [*card()*](https://r-spatial.github.io/spdep/reference/card.html) of spdep.
+
+```{r}
+table(hunan$County, card(wm_d62))
+
+```
+
+### 3.7.3 Plotting Fixed Distance Weight Matrix
+
+```{r}
+plot(hunan$geometry, border="lightgrey")
+plot(wm_d62, coords, add=TRUE)
+plot(k1, coords, add=TRUE, col="red", length=0.08)
+```
+
+```{r}
+par(mfrow=c(1,2))
+plot(hunan$geometry, border="lightgrey")
+plot(k1, coords, add=TRUE, col="red", length=0.08, main="1st nearest neighbours")
+plot(hunan$geometry, border="lightgrey")
+plot(wm_d62, coords, add=TRUE, pch = 19, cex = 0.6, main="Distance link")
+```
+
+### 3.7.4 Computing Adaptive Distance Weight Matrix
+
+```{r}
+knn6 <- knn2nb(knearneigh(coords, k=6))
+knn6
+```
+
+### 3.7.5 Plotting Distance Based Neighbours
+
+```{r}
+plot(hunan$geometry, border="lightgrey")
+plot(knn6, coords, pch = 19, cex = 0.6, add = TRUE, col = "red")
+```
+
+## 3.8 Weights Based on Inversed Distance Weights
+
+```{r}
+dist <- nbdists(wm_q, coords, longlat = TRUE)
+ids <- lapply(dist, function(x) 1/(x))
+
+```
+
+### 3.8.1 Row Standardized Weight Matrix
+
+Next, we need to assign weights to each neighboring polygon. In our case, each neighboring polygon will be assigned equal weight (style=\"W\"). This is accomplished by assigning the fraction 1/(#ofneighbors) to each neighboring county then summing the weighted income values. While this is the most intuitive way to summaries the neighbors\' values it has one drawback in that polygons along the edges of the study area will base their lagged values on fewer polygons thus potentially over- or under-estimating the true nature of the spatial autocorrelation in the data. For this example, we\'ll stick with the style=\"W\" option for simplicity\'s sake but note that other more robust options are available, notably style=\"B\".
+
+```{r}
+rswm_q <- nb2listw(wm_q, style="W", zero.policy = TRUE)
+rswm_q
+```
+
+The zero.policy=TRUE option allows for lists of non-neighbors. This should be used with caution since the user may not be aware of missing neighbors in their dataset however, a zero.policy of FALSE would return an error.
+
+```{r}
+rswm_q$weights[1]
+```
+
+Using the same method, we can also derive a row standardised distance weight matrix by using the code chunk below.
+
+```{r}
+rswm_ids <- nb2listw(wm_q, glist=ids, style="B", zero.policy=TRUE)
+rswm_ids$weights[1]
+
+```
+
+```{r}
+summary(unlist(rswm_ids$weights))
+
+```
+
+## 3.9 Application of Spatial Weight Matrix
+
+In this section, you will learn how to create four different spatial lagged variables, they are:
+
+-   spatial lag with row-standardized weights,
+
+-   spatial lag as a sum of neighbouring values,
+
+-   spatial window average, and spatial window sum.
+
+### 3.9.1 Spatial lag with row-standardized weights
+
+```{r}
+GDPPC.lag <- lag.listw(rswm_q, hunan1$GDPPC)
+GDPPC.lag
+```
+
+```{r}
+lag.list <- list(hunan1$NAME_3, GDPPC.lag)
+lag.res <- as.data.frame(lag.list)
+colnames(lag.res) <- c("NAME_3", "lag GDPPC")
+hunan1 <- left_join(hunan1,lag.res)
+```
+
+Next, we will plot both the GDPPC and spatial lag GDPPC for comparison using the code chunk below.
+
+```{r}
+gdppc <- qtm(hunan1, "GDPPC")
+lag_gdppc <- qtm(hunan1, "lag GDPPC")
+tmap_arrange(gdppc, lag_gdppc, asp=1, ncol=2)
+```
+
+### 3.9.2 Spatial lag as a sum of neighbouring values
+
+We can calculate spatial lag as a sum of neighboring values by assigning binary weights. This requires us to go back to our neighbors list, then apply a function that will assign binary weights, then we use glist = in the nb2listw function to explicitly assign these weights.
+
+We start by applying a function that will assign a value of 1 per each neighbor. This is done with lapply, which we have been using to manipulate the neighbors structure throughout the past notebooks. Basically it applies a function across each value in the neighbors structure.
+
+```{r}
+b_weights <- lapply(wm_q, function(x) 0*x + 1)
+b_weights2 <- nb2listw(wm_q, 
+                       glist = b_weights, 
+                       style = "B")
+```
+
+With the proper weights assigned, we can use lag.listw to compute a lag variable from our weight and GDPPC.
+
+```{r}
+lag_sum <- list(hunan1$NAME_3, lag.listw(b_weights2, hunan1$GDPPC))
+lag.res <- as.data.frame(lag_sum)
+colnames(lag.res) <- c("NAME_3", "lag_sum GDPPC")
+```
+
+Next, we will append the lag_sum GDPPC field into hunan sf data frame by using the code chunk below.
+
+```{r}
+hunan1 <- left_join(hunan1, lag.res)
+```
+
+```{r}
+gdppc <- qtm(hunan1, "GDPPC")
+lag_sum_gdppc <- qtm(hunan1, "lag_sum GDPPC")
+tmap_arrange(gdppc, lag_sum_gdppc, asp=1, ncol=2)
+```
+
+### 3.9.3 Spatial Window Average
+
+The spatial window average uses row-standardized weights and includes the diagonal element. To do this in R, we need to go back to the neighbors structure and add the diagonal element before assigning weights. To begin we assign k6 to a new variable because we will directly alter its structure to add the diagonal elements.
+
+```{r}
+wm_q1 <- wm_q
+include.self(wm_q1)
+wm_q1 <- nb2listw(wm_q1)
+
+```
+
+Lastly, we just need to create the lag variable from our weight structure and GDPPC variable.
+
+```{r}
+lag_w_avg_gpdpc <- lag.listw(wm_q1, hunan1$GDPPC)
+```
+
+```{r}
+lag.list.wm_q1 <- list(hunan1$NAME_3, lag.listw(wm_q1, hunan1$GDPPC))
+lag_wm_q1.res <- as.data.frame(lag.list.wm_q1)
+colnames(lag_wm_q1.res) <- c("NAME_3", "lag_window_avg GDPPC")
+```
+
+Next, the code chunk below will be used to append *lag_window_avg GDPPC* values onto *hunan* sf data.frame by using *left_join()* of **dplyr** package.
+
+```{r}
+hunan1 <- left_join(hunan1, lag_wm_q1.res)
+```
+
+Lastly, *qtm()* of **tmap** package is used to plot the GDPPC and lag_window_avg GDPPC map next to each other for quick comparison.
+
+```{r}
+gdppc <- qtm(hunan1, "GDPPC")
+w_avg_gdppc <- qtm(hunan1, "lag_window_avg GDPPC")
+tmap_arrange(gdppc, w_avg_gdppc, asp=1, ncol=2)
+```
+
+### 3.9.4 Spatial Window Sum
+
+The spatial window sum is the counter part of the window average, but without using row-standardized weights. To do this we assign binary weights to the neighbor structure that includes the diagonal element.
+
+```{r}
+wm_q1 <- wm_q
+include.self(wm_q1)
+b_weights <- lapply(wm_q1, function(x) 0*x + 1)
+b_weights2 <- nb2listw(wm_q1, 
+                       glist = b_weights, 
+                       style = "B")
+```
+
+With our new weight structure, we can compute the lag variable with *lag.listw()*.
+
+```{r}
+w_sum_gdppc <- list(hunan1$NAME_3, lag.listw(b_weights2, hunan1$GDPPC))
+w_sum_gdppc
+```
+
+```{r}
+w_sum_gdppc.res <- as.data.frame(w_sum_gdppc)
+colnames(w_sum_gdppc.res) <- c("NAME_3", "w_sum GDPPC")
+hunan1 <- left_join(hunan1, w_sum_gdppc.res)
+```
+
+```{r}
+gdppc <- qtm(hunan1, "GDPPC")
+w_sum_gdppc <- qtm(hunan1, "w_sum GDPPC")
+tmap_arrange(gdppc, w_sum_gdppc, asp=1, ncol=2)
+```
+
+Note: For more effective comparison, it is advicible to use the core tmap mapping functions.
