@@ -1,0 +1,89 @@
+---
+title: "Geospatial Analytics For Social Good"
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse,sf,spdep,tmap)
+```
+
+```{r}
+nigeria_1 <- st_read(dsn = "geospatial", 
+                 layer = "geoBoundaries-NGA-ADM2")
+nigeria_1
+```
+
+```{r}
+nigeria_2 <- st_read("aspatial/nigeria.csv")
+```
+
+```{r}
+nigeria_crs <- st_transform(nigeria_1, 
+                              crs = 26391)
+
+nigeria_crs
+```
+
+```{r}
+nigeria_2 <- nigeria_2 %>%
+  select(lat_deg,lon_deg,clean_adm2,status_clean) 
+  
+
+nigeria_2 <- nigeria_2[!(is.na(nigeria_2$status_clean) |  nigeria_2$status_clean==""), ]
+nigeria_2
+```
+
+```{r}
+nigeria_2_sf <- st_as_sf(nigeria_2, 
+                       coords = c("lon_deg", "lat_deg"),
+                       crs=4326) %>%
+  st_transform(crs = 26391)
+
+```
+
+```{r}
+nigeria_2_sf
+```
+
+```{r}
+nigeria_crs$`WaterPointCount`<- lengths(st_intersects(nigeria_crs, nigeria_2_sf))
+sum(nigeria_crs$`WaterPointCount`)
+```
+
+```{r}
+unique(nigeria_2_sf$status_clean)
+```
+
+```{r}
+nigeria_2_functional <- nigeria_2_sf %>%
+  filter(status_clean %in% c("Functional",
+                            "Functional but not in use",
+                            "Functional but needs repair"))
+
+```
+
+```{r}
+nigeria_crs$`Functional`<- lengths(st_intersects(nigeria_crs, nigeria_2_functional))
+```
+
+```{r}
+nigeria_2_nonfunctional <- nigeria_2_sf %>%
+  filter(status_clean %in% c("Abandoned/Decommissioned",
+                            "Abandoned",
+                            "Non-Functional"))
+```
+
+```{r}
+nigeria_crs$`NonFunctional`<- lengths(st_intersects(nigeria_crs, nigeria_2_nonfunctional))
+```
+
+```{r}
+nigeria_crs <- nigeria_crs %>%
+  mutate(if (`WaterPointCount` > 0) {`Percent1` = `NonFunctional`/`WaterPointCount`})
+         
+
+```
+
+```{r}
+nigeria_crs
+```

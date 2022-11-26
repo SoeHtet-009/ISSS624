@@ -2,4 +2,6 @@
 title: "ISSS624"
 ---
 
+![](images/dcf8c080-81a8-11ea-9cdb-0ba836f18a58.jpg){fig-align="center" width="800"}
+
 Hello everyone, I will share with you my learning journey of geospatial analytics in this blog.
