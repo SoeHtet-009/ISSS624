@@ -1,0 +1,135 @@
+---
+title: "In Class Exercise 2"
+editor: visual
+---
+
+## Overview
+
+## Getting Started
+
+```{r}
+pacman::p_load(spdep,tidyverse,tmap,sf,funModeling)
+```
+
+## Importing Geospatial Data
+
+```{r}
+nigeria_1 <- st_read(dsn = "geospatial", 
+                 layer = "geoBoundaries-NGA-ADM2",
+                 crs = 4326)
+nigeria_1
+```
+
+## Importing Attribute Data
+
+```{r}
+nigeria_2 <- read.csv("aspatial/Nigeria_Att.csv")
+nigeria_2
+```
+
+Tibble dataframe is transformed to sf data table in code chunk below.
+
+```{r}
+nigeria_2 <- st_as_sf(nigeria_2, 
+                       coords = c("lon_deg", "lat_deg"),
+                       crs=4326) 
+```
+
+Blank rows of status column are replaced with unknown.
+
+```{r}
+nigeria_2$status_clean[nigeria_2$status_clean==""] = "Unknown"
+```
+
+## EDA
+
+In the code chunk below, `freq()` of **funModeling** package is used to display the distribution of *status_clean* field in *nigeria_2*.
+
+```{r}
+freq(data=nigeria_2, 
+     input = 'status_clean')
+```
+
+## Extracting Water Point Data
+
+In this section, we will learn how to classify functional and non-functional water point in nigeria_2 data.
+
+### Extracting Functional Water Points
+
+```{r}
+functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Functional",
+                             "Functional but needs repair",
+                             "Functional but not in use"))
+freq(data=functional, 
+     input = 'status_clean')
+```
+
+### Extracting Non-functional Water Points
+
+```{r}
+Non_functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Non-Functional",
+                             "Non-Functional due to dry season",
+                             "Non functional but not in use",
+                             "Abandoned/Decommissioned",
+                             "Abandoned"))
+freq(data=Non_functional, 
+     input = 'status_clean')
+```
+
+### Extracting Unknown Status Water Point
+
+```{r}
+Unknown <- nigeria_2 %>%
+  filter(status_clean == "Unknown")
+```
+
+## Performing Point In Polygon Count
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`total_wpt` = lengths(
+    st_intersects(nigeria_1, nigeria_2))) %>%
+  mutate(`wpt_functional` = lengths(
+    st_intersects(nigeria_1, functional))) %>%
+  mutate(`wpt_non-functional` = lengths(
+    st_intersects(nigeria_1, Non_functional))) %>%
+  mutate(`wpt_unknown` = lengths(
+    st_intersects(nigeria_1, Unknown)))
+```
+
+## Saving Analytical Data
+
+```{r}
+nigeria_1 <- nigeria_1 %>%
+  mutate(pct_functional = `wpt_functional`/`total_wpt`) %>%
+  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) %>%
+  select(1,6:12)
+```
+
+Things to learn from the code chunk above:
+
+-   `mutate()` of **dplyr** package is used to derive two fields namely *pct_functional* and *pct_non-functional*.
+
+-   to keep the file size small, `select()` of **dplyr** is used to retain only relevant fields.
+
+Now, you have the tidy sf data table subsequent analysis. We will save the sf data table into rds format.
+
+```{r}
+write_rds(nigeria_1, "nigeria__1.rds")
+```
+
+## Visualizing Spatial Distribution of Water Points
+
+```{r}
+#|fig-width: 14
+#|fig-height: 12
+nigeria__1 <- read_rds("nigeria__1.rds")
+total <- qtm(nigeria__1, "total_wpt")
+wp_functional <- qtm(nigeria__1, "wpt_functional")
+wp_nonfunctional <- qtm(nigeria__1, "wpt_non-functional")
+unknown <- qtm(nigeria__1, "wpt_unknown")
+
+tmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=1, ncol=2)
+```
