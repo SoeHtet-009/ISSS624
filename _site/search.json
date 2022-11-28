@@ -228,7 +228,7 @@
     "href": "In-Class_Exercise/In-class_Ex02/In-class_ex02.html#importing-attribute-data",
     "title": "In Class Exercise 2",
     "section": "Importing Attribute Data",
-    "text": "Importing Attribute Data\n\nnigeria_2 <- read.csv(\"aspatial/Nigeria_Att.csv\")\n\nTibble dataframe is transformed to sf data table in code chunk below.\n\nnigeria_2 <- st_as_sf(nigeria_2, \n                       coords = c(\"lon_deg\", \"lat_deg\"),\n                       crs=4326) \nwrite_rds(nigeria_2, \"nigeria_2.rds\")\n\nBlank rows of status column are replaced with unknown.\n\nnigeria_2 <- read_rds(\"nigeria_2.rds\")\nnigeria_2$status_clean[nigeria_2$status_clean==\"\"] = \"Unknown\""
+    "text": "Importing Attribute Data\n\nnigeria_2 <- read.csv(\"Nigeria_Att.csv\")\n\nTibble dataframe is transformed to sf data table in code chunk below.\n\nnigeria_2 <- st_as_sf(nigeria_2, \n                       coords = c(\"lon_deg\", \"lat_deg\"),\n                       crs=4326) \n\nBlank rows of status column are replaced with unknown.\n\nnigeria_2$status_clean[nigeria_2$status_clean==\"\"] = \"Unknown\""
   },
   {
     "objectID": "In-Class_Exercise/In-class_Ex02/In-class_ex02.html#eda",
@@ -256,13 +256,13 @@
     "href": "In-Class_Exercise/In-class_Ex02/In-class_ex02.html#saving-analytical-data",
     "title": "In Class Exercise 2",
     "section": "Saving Analytical Data",
-    "text": "Saving Analytical Data\n\nnigeria_1 <- nigeria_1 %>%\n  mutate(pct_functional = `wpt_functional`/`total_wpt`) %>%\n  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) %>%\n  select(1,6:12)\n\nThings to learn from the code chunk above:\n\nmutate() of dplyr package is used to derive two fields namely pct_functional and pct_non-functional.\nto keep the file size small, select() of dplyr is used to retain only relevant fields.\n\nNow, you have the tidy sf data table subsequent analysis. We will save the sf data table into rds format.\n\nwrite_rds(nigeria_1, \"nigeria__1.rds\")"
+    "text": "Saving Analytical Data\n\nnigeria_1 <- nigeria_1 %>%\n  mutate(pct_functional = `wpt_functional`/`total_wpt`) %>%\n  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) \n\nThings to learn from the code chunk above:\n\nmutate() of dplyr package is used to derive two fields namely pct_functional and pct_non-functional.\nto keep the file size small, select() of dplyr is used to retain only relevant fields.\n\nNow, you have the tidy sf data table subsequent analysis. We will save the sf data table into rds format."
   },
   {
     "objectID": "In-Class_Exercise/In-class_Ex02/In-class_ex02.html#visualizing-spatial-distribution-of-water-points",
     "href": "In-Class_Exercise/In-class_Ex02/In-class_ex02.html#visualizing-spatial-distribution-of-water-points",
     "title": "In Class Exercise 2",
     "section": "Visualizing Spatial Distribution of Water Points",
-    "text": "Visualizing Spatial Distribution of Water Points\n\n#|fig-width: 14\n#|fig-height: 12\nnigeria__1 <- read_rds(\"nigeria__1.rds\")\ntotal <- qtm(nigeria__1, \"total_wpt\")\nwp_functional <- qtm(nigeria__1, \"wpt_functional\")\nwp_nonfunctional <- qtm(nigeria__1, \"wpt_non-functional\")\nunknown <- qtm(nigeria__1, \"wpt_unknown\")\n\ntmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=1, ncol=2)"
+    "text": "Visualizing Spatial Distribution of Water Points\n\n#|fig-width: 14\n#|fig-height: 12\n\ntotal <- qtm(nigeria_1, \"total_wpt\")\nwp_functional <- qtm(nigeria_1, \"wpt_functional\")\nwp_nonfunctional <- qtm(nigeria_1, \"wpt_non-functional\")\nunknown <- qtm(nigeria_1, \"wpt_unknown\")\n\ntmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=1, ncol=2)"
   }
 ]

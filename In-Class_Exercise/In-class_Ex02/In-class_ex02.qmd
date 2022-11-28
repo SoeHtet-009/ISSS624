@@ -23,7 +23,7 @@ nigeria_1
 ## Importing Attribute Data
 
 ```{r}
-nigeria_2 <- read.csv("aspatial/Nigeria_Att.csv")
+nigeria_2 <- read.csv("Nigeria_Att.csv")
 ```
 
 Tibble dataframe is transformed to sf data table in code chunk below.
@@ -32,13 +32,13 @@ Tibble dataframe is transformed to sf data table in code chunk below.
 nigeria_2 <- st_as_sf(nigeria_2, 
                        coords = c("lon_deg", "lat_deg"),
                        crs=4326) 
-write_rds(nigeria_2, "nigeria_2.rds")
+
 ```
 
 Blank rows of status column are replaced with unknown.
 
 ```{r}
-nigeria_2 <- read_rds("nigeria_2.rds")
+
 nigeria_2$status_clean[nigeria_2$status_clean==""] = "Unknown"
 ```
 
@@ -105,8 +105,8 @@ nigeria_1 <- nigeria_1 %>%
 ```{r}
 nigeria_1 <- nigeria_1 %>%
   mutate(pct_functional = `wpt_functional`/`total_wpt`) %>%
-  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) %>%
-  select(1,6:12)
+  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) 
+  
 ```
 
 Things to learn from the code chunk above:
@@ -117,20 +117,16 @@ Things to learn from the code chunk above:
 
 Now, you have the tidy sf data table subsequent analysis. We will save the sf data table into rds format.
 
-```{r}
-write_rds(nigeria_1, "nigeria__1.rds")
-```
-
 ## Visualizing Spatial Distribution of Water Points
 
 ```{r}
 #|fig-width: 14
 #|fig-height: 12
-nigeria__1 <- read_rds("nigeria__1.rds")
-total <- qtm(nigeria__1, "total_wpt")
-wp_functional <- qtm(nigeria__1, "wpt_functional")
-wp_nonfunctional <- qtm(nigeria__1, "wpt_non-functional")
-unknown <- qtm(nigeria__1, "wpt_unknown")
+
+total <- qtm(nigeria_1, "total_wpt")
+wp_functional <- qtm(nigeria_1, "wpt_functional")
+wp_nonfunctional <- qtm(nigeria_1, "wpt_non-functional")
+unknown <- qtm(nigeria_1, "wpt_unknown")
 
 tmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=1, ncol=2)
 ```
