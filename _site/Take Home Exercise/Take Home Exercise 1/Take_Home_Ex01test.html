@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ISSS624 - Take Home Exercise 1</title>
+<title>ISSS624 - Take Home Exercise 1: Geospatial Analytics For Social Good</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -208,38 +208,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
-  <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">Importing Geospatial Data</a></li>
-  <li><a href="#importing-attribute-data" id="toc-importing-attribute-data" class="nav-link" data-scroll-target="#importing-attribute-data">Importing Attribute Data</a></li>
-  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda">EDA</a></li>
-  <li><a href="#extracting-water-point-data" id="toc-extracting-water-point-data" class="nav-link" data-scroll-target="#extracting-water-point-data">Extracting Water Point Data</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2 Getting Started</a></li>
+  <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">3 Importing Geospatial Data</a></li>
+  <li><a href="#importing-attribute-data" id="toc-importing-attribute-data" class="nav-link" data-scroll-target="#importing-attribute-data">4 Importing Attribute Data</a></li>
+  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda">5 EDA</a></li>
+  <li><a href="#extracting-water-point-data" id="toc-extracting-water-point-data" class="nav-link" data-scroll-target="#extracting-water-point-data">6 Extracting Water Point Data</a>
   <ul class="collapse">
-  <li><a href="#extracting-functional-water-points" id="toc-extracting-functional-water-points" class="nav-link" data-scroll-target="#extracting-functional-water-points">Extracting Functional Water Points</a></li>
-  <li><a href="#extracting-non-functional-water-points" id="toc-extracting-non-functional-water-points" class="nav-link" data-scroll-target="#extracting-non-functional-water-points">Extracting Non-functional Water Points</a></li>
-  <li><a href="#extracting-unknown-status-water-point" id="toc-extracting-unknown-status-water-point" class="nav-link" data-scroll-target="#extracting-unknown-status-water-point">Extracting Unknown Status Water Point</a></li>
+  <li><a href="#extracting-functional-water-points" id="toc-extracting-functional-water-points" class="nav-link" data-scroll-target="#extracting-functional-water-points">6.1 Extracting Functional Water Points</a></li>
+  <li><a href="#extracting-non-functional-water-points" id="toc-extracting-non-functional-water-points" class="nav-link" data-scroll-target="#extracting-non-functional-water-points">6.2 Extracting Non-functional Water Points</a></li>
+  <li><a href="#extracting-unknown-status-water-point" id="toc-extracting-unknown-status-water-point" class="nav-link" data-scroll-target="#extracting-unknown-status-water-point">6.3 Extracting Unknown Status Water Point</a></li>
   </ul></li>
-  <li><a href="#performing-point-in-polygon-count" id="toc-performing-point-in-polygon-count" class="nav-link" data-scroll-target="#performing-point-in-polygon-count">Performing Point In Polygon Count</a></li>
-  <li><a href="#saving-analytical-data" id="toc-saving-analytical-data" class="nav-link" data-scroll-target="#saving-analytical-data">Saving Analytical Data</a></li>
-  <li><a href="#visualizing-spatial-distribution-of-water-points" id="toc-visualizing-spatial-distribution-of-water-points" class="nav-link" data-scroll-target="#visualizing-spatial-distribution-of-water-points">Visualizing Spatial Distribution of Water Points</a></li>
-  <li><a href="#visualizing-spatial-distribution-of-water-points-1" id="toc-visualizing-spatial-distribution-of-water-points-1" class="nav-link" data-scroll-target="#visualizing-spatial-distribution-of-water-points-1">Visualizing Spatial Distribution of Water Points %</a></li>
-  <li><a href="#computation-of-spatial-weight-matrix" id="toc-computation-of-spatial-weight-matrix" class="nav-link" data-scroll-target="#computation-of-spatial-weight-matrix">Computation of Spatial Weight Matrix</a></li>
-  <li><a href="#global-spatial-autocorrelation" id="toc-global-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-spatial-autocorrelation">Global Spatial Autocorrelation</a>
+  <li><a href="#performing-point-in-polygon-count" id="toc-performing-point-in-polygon-count" class="nav-link" data-scroll-target="#performing-point-in-polygon-count">7 Performing Point In Polygon Count</a></li>
+  <li><a href="#saving-analytical-data" id="toc-saving-analytical-data" class="nav-link" data-scroll-target="#saving-analytical-data">8 Saving Analytical Data</a></li>
+  <li><a href="#visualizing-spatial-distribution-of-water-points" id="toc-visualizing-spatial-distribution-of-water-points" class="nav-link" data-scroll-target="#visualizing-spatial-distribution-of-water-points">9 Visualizing Spatial Distribution of Water Points</a></li>
+  <li><a href="#visualizing-spatial-distribution-of-water-points-1" id="toc-visualizing-spatial-distribution-of-water-points-1" class="nav-link" data-scroll-target="#visualizing-spatial-distribution-of-water-points-1">10 Visualizing Spatial Distribution of Water Points %</a></li>
+  <li><a href="#computation-of-spatial-weight-matrix" id="toc-computation-of-spatial-weight-matrix" class="nav-link" data-scroll-target="#computation-of-spatial-weight-matrix">11 Computation of Spatial Weight Matrix</a></li>
+  <li><a href="#global-spatial-autocorrelation" id="toc-global-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-spatial-autocorrelation">12 Global Spatial Autocorrelation</a>
   <ul class="collapse">
-  <li><a href="#global-spatial-autocorrelation-morans-i" id="toc-global-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-morans-i">Global Spatial Autocorrelation : Moran’s I</a></li>
-  <li><a href="#global-spatial-autocorrelation-gearys-c" id="toc-global-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-gearys-c">Global Spatial Autocorrelation : Geary’s C</a></li>
+  <li><a href="#global-spatial-autocorrelation-morans-i" id="toc-global-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-morans-i">12.1 Global Spatial Autocorrelation : Moran’s I</a></li>
+  <li><a href="#global-spatial-autocorrelation-gearys-c" id="toc-global-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-gearys-c">12.2 Global Spatial Autocorrelation : Geary’s C</a></li>
   </ul></li>
-  <li><a href="#cluster-and-outlier-analysis" id="toc-cluster-and-outlier-analysis" class="nav-link" data-scroll-target="#cluster-and-outlier-analysis">Cluster and Outlier Analysis</a>
+  <li><a href="#cluster-and-outlier-analysis" id="toc-cluster-and-outlier-analysis" class="nav-link" data-scroll-target="#cluster-and-outlier-analysis">13 Cluster and Outlier Analysis</a>
   <ul class="collapse">
-  <li><a href="#mapping-local-morans-i" id="toc-mapping-local-morans-i" class="nav-link" data-scroll-target="#mapping-local-morans-i">Mapping Local Moran’s I</a></li>
-  <li><a href="#morans-scatterplot" id="toc-morans-scatterplot" class="nav-link" data-scroll-target="#morans-scatterplot">Moran’s Scatterplot</a></li>
-  <li><a href="#lisa-map-classes" id="toc-lisa-map-classes" class="nav-link" data-scroll-target="#lisa-map-classes">Lisa Map Classes</a></li>
+  <li><a href="#mapping-local-morans-i" id="toc-mapping-local-morans-i" class="nav-link" data-scroll-target="#mapping-local-morans-i">13.1 Mapping Local Moran’s I</a></li>
+  <li><a href="#morans-scatterplot" id="toc-morans-scatterplot" class="nav-link" data-scroll-target="#morans-scatterplot">13.2 Moran’s Scatterplot</a></li>
+  <li><a href="#lisa-map-classes" id="toc-lisa-map-classes" class="nav-link" data-scroll-target="#lisa-map-classes">14 Lisa Map Classes</a></li>
   </ul></li>
-  <li><a href="#hot-spot-and-cold-spot-area-analysis" id="toc-hot-spot-and-cold-spot-area-analysis" class="nav-link" data-scroll-target="#hot-spot-and-cold-spot-area-analysis">Hot Spot and Cold Spot Area Analysis</a>
+  <li><a href="#hot-spot-and-cold-spot-area-analysis" id="toc-hot-spot-and-cold-spot-area-analysis" class="nav-link" data-scroll-target="#hot-spot-and-cold-spot-area-analysis">15 Hot Spot and Cold Spot Area Analysis</a>
   <ul class="collapse">
-  <li><a href="#local-getis-ord-statistics" id="toc-local-getis-ord-statistics" class="nav-link" data-scroll-target="#local-getis-ord-statistics"><strong>Local Getis-Ord Statistics</strong></a></li>
-  <li><a href="#local-g-cluster-map-by-significance-level" id="toc-local-g-cluster-map-by-significance-level" class="nav-link" data-scroll-target="#local-g-cluster-map-by-significance-level">Local G Cluster Map By Significance Level</a></li>
-  <li><a href="#local-g-cluster-map-by-significance-level-1" id="toc-local-g-cluster-map-by-significance-level-1" class="nav-link" data-scroll-target="#local-g-cluster-map-by-significance-level-1">Local G* Cluster Map By Significance Level</a></li>
+  <li><a href="#local-getis-ord-statistics" id="toc-local-getis-ord-statistics" class="nav-link" data-scroll-target="#local-getis-ord-statistics"><strong>15.1 Local Getis-Ord Statistics</strong></a></li>
+  <li><a href="#local-g-cluster-map-by-significance-level" id="toc-local-g-cluster-map-by-significance-level" class="nav-link" data-scroll-target="#local-g-cluster-map-by-significance-level">15.2 Local G Cluster Map By Significance Level</a></li>
+  <li><a href="#local-g-cluster-map-by-significance-level-1" id="toc-local-g-cluster-map-by-significance-level-1" class="nav-link" data-scroll-target="#local-g-cluster-map-by-significance-level-1">15.3 Local G* Cluster Map By Significance Level</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Take Home Exercise 1</h1>
+<h1 class="title">Take Home Exercise 1: Geospatial Analytics For Social Good</h1>
 </div>
 
 
@@ -265,19 +265,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<h2 class="anchored" data-anchor-id="overview">1 Overview</h2>
 <p>Water is an important resource to mankind. Clean and accessible water is critical to human health. It provides a healthy environment, a sustainable economy, reduces poverty and ensures peace and security. Yet over 40% of the global population does not have access to sufficient clean water. By 2025, 1.8 billion people will be living in countries or regions with absolute water scarcity, according to UN-Water. The lack of water poses a major threat to several sectors, including food security. Agriculture uses about 70% of the world’s accessible freshwater.</p>
 <p>Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, we will apply appropriate global and local measures of spatial Association techniques to reveals the spatial patterns of non-functional water points. Nigeria will be the country of study for this assignment.</p>
 </section>
 <section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<h2 class="anchored" data-anchor-id="getting-started">2 Getting Started</h2>
 <p>Firstly, we will install libraries below for data wrangling and geospatial analysis purposes.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(spdep,tidyverse,tmap,sf,funModeling,rgeoda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-geospatial-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-geospatial-data">Importing Geospatial Data</h2>
+<h2 class="anchored" data-anchor-id="importing-geospatial-data">3 Importing Geospatial Data</h2>
 <p>To import a shapefile object, st_read() function of sf package can be used as shown in the code chunk below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"geospatial"</span>, </span>
@@ -376,7 +376,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="importing-attribute-data" class="level2">
-<h2 class="anchored" data-anchor-id="importing-attribute-data">Importing Attribute Data</h2>
+<h2 class="anchored" data-anchor-id="importing-attribute-data">4 Importing Attribute Data</h2>
 <p>To import csv fiile, read.csv() function can be utilized. The data has been cleaned beforehand to filter the country to include Nigeria only. Otherwise, filter() function of dplyr can be used to exclude all the other countries.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nigeria_2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Nigeria_Att.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -393,7 +393,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="eda" class="level2">
-<h2 class="anchored" data-anchor-id="eda">EDA</h2>
+<h2 class="anchored" data-anchor-id="eda">5 EDA</h2>
 <p>In the code chunk below, <code>freq()</code> of <strong>funModeling</strong> package is used to display the distribution of <em>status_clean</em> field in <em>attribute data set nigeria_2</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(<span class="at">data=</span>nigeria_2, </span>
@@ -420,10 +420,10 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="extracting-water-point-data" class="level2">
-<h2 class="anchored" data-anchor-id="extracting-water-point-data">Extracting Water Point Data</h2>
+<h2 class="anchored" data-anchor-id="extracting-water-point-data">6 Extracting Water Point Data</h2>
 <p>In this section, we will learn how to classify functional and non-functional water points in attribute data.</p>
 <section id="extracting-functional-water-points" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-functional-water-points">Extracting Functional Water Points</h3>
+<h3 class="anchored" data-anchor-id="extracting-functional-water-points">6.1 Extracting Functional Water Points</h3>
 <p>Dplyr’s function filter() is used to classify functional water points and proportion is plotted after filtering.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>functional <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
@@ -448,7 +448,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="extracting-non-functional-water-points" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-non-functional-water-points">Extracting Non-functional Water Points</h3>
+<h3 class="anchored" data-anchor-id="extracting-non-functional-water-points">6.2 Extracting Non-functional Water Points</h3>
 <p>Likewise, non-functional water points are extracted by using the following texts in status_clean field.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Non_functional <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
@@ -476,7 +476,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="extracting-unknown-status-water-point" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-unknown-status-water-point">Extracting Unknown Status Water Point</h3>
+<h3 class="anchored" data-anchor-id="extracting-unknown-status-water-point">6.3 Extracting Unknown Status Water Point</h3>
 <p>Lastly, the following code chunk is used to extract unknown status.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Unknown <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
@@ -485,7 +485,7 @@ Geodetic CRS:  WGS 84
 </section>
 </section>
 <section id="performing-point-in-polygon-count" class="level2">
-<h2 class="anchored" data-anchor-id="performing-point-in-polygon-count">Performing Point In Polygon Count</h2>
+<h2 class="anchored" data-anchor-id="performing-point-in-polygon-count">7 Performing Point In Polygon Count</h2>
 <p>The following code chunk is used to calculate how many total, functional, non-functional and unknown water points are present in each polygon.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
@@ -500,7 +500,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="saving-analytical-data" class="level2">
-<h2 class="anchored" data-anchor-id="saving-analytical-data">Saving Analytical Data</h2>
+<h2 class="anchored" data-anchor-id="saving-analytical-data">8 Saving Analytical Data</h2>
 <p>Afterwards, percentage of functional and non-functional water points in each polygon are computed by dividing with total water points.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span></span>
@@ -516,7 +516,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="visualizing-spatial-distribution-of-water-points" class="level2">
-<h2 class="anchored" data-anchor-id="visualizing-spatial-distribution-of-water-points">Visualizing Spatial Distribution of Water Points</h2>
+<h2 class="anchored" data-anchor-id="visualizing-spatial-distribution-of-water-points">9 Visualizing Spatial Distribution of Water Points</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"nigeria_1.rds"</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -540,7 +540,7 @@ Geodetic CRS:  WGS 84
 </div>
 </section>
 <section id="visualizing-spatial-distribution-of-water-points-1" class="level2">
-<h2 class="anchored" data-anchor-id="visualizing-spatial-distribution-of-water-points-1">Visualizing Spatial Distribution of Water Points %</h2>
+<h2 class="anchored" data-anchor-id="visualizing-spatial-distribution-of-water-points-1">10 Visualizing Spatial Distribution of Water Points %</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pct_functional <span class="ot">&lt;-</span> <span class="fu">qtm</span>(nigeria_1, <span class="st">"pct_functional"</span>)<span class="sc">+</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>         <span class="fu">tm_layout</span>(<span class="at">legend.height=</span><span class="fl">0.25</span>,</span>
@@ -612,7 +612,7 @@ structure(list(: provided 2 variables to replace 1 variables</code></pre>
 </div>
 </section>
 <section id="computation-of-spatial-weight-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="computation-of-spatial-weight-matrix">Computation of Spatial Weight Matrix</h2>
+<h2 class="anchored" data-anchor-id="computation-of-spatial-weight-matrix">11 Computation of Spatial Weight Matrix</h2>
 <p>Weight matrix can be computed in various methods. Firstly, queen contiguity based weight is computed below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>wm <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(nigeria_1, </span>
@@ -762,9 +762,9 @@ Non-symmetric neighbours list</code></pre>
 </div>
 </section>
 <section id="global-spatial-autocorrelation" class="level2">
-<h2 class="anchored" data-anchor-id="global-spatial-autocorrelation">Global Spatial Autocorrelation</h2>
+<h2 class="anchored" data-anchor-id="global-spatial-autocorrelation">12 Global Spatial Autocorrelation</h2>
 <section id="global-spatial-autocorrelation-morans-i" class="level3">
-<h3 class="anchored" data-anchor-id="global-spatial-autocorrelation-morans-i">Global Spatial Autocorrelation : Moran’s I</h3>
+<h3 class="anchored" data-anchor-id="global-spatial-autocorrelation-morans-i">12.1 Global Spatial Autocorrelation : Moran’s I</h3>
 <p>Global Moran’s I is a statistical test that indicates spatial and attribute similarity. Under randomization, Moran’s I value is approximately zero. Therefore, positive Moran’s I value is interpreted as attribute similarity pattern (positive spatial autocorrelation) across the map while negative Moran’s I value shows checker board pattern (alternate low and high) across the map.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(nigeria<span class="sc">$</span><span class="st">`</span><span class="at">pct_non-functional</span><span class="st">`</span>, </span>
@@ -807,7 +807,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 </section>
 <section id="global-spatial-autocorrelation-gearys-c" class="level3">
-<h3 class="anchored" data-anchor-id="global-spatial-autocorrelation-gearys-c">Global Spatial Autocorrelation : Geary’s C</h3>
+<h3 class="anchored" data-anchor-id="global-spatial-autocorrelation-gearys-c">12.2 Global Spatial Autocorrelation : Geary’s C</h3>
 <p>Geary’s C computation is different from Moran’s I in such a way that Geary’s C value that is bigger than expected value (1 under randomization) indicates dissimilarity whereas the value below 1 indicates similarity with its neighbors.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geary.test</span>(nigeria<span class="sc">$</span><span class="st">`</span><span class="at">pct_non-functional</span><span class="st">`</span>, <span class="at">listw=</span>rswm,<span class="at">zero.policy=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -829,7 +829,7 @@ Geary C statistic       Expectation          Variance
 </section>
 </section>
 <section id="cluster-and-outlier-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="cluster-and-outlier-analysis">Cluster and Outlier Analysis</h2>
+<h2 class="anchored" data-anchor-id="cluster-and-outlier-analysis">13 Cluster and Outlier Analysis</h2>
 <p>Local Indicators of Spatial Association or LISA are statistics that evaluate the existence of clusters in the spatial arrangement of a given variable. Local Moran’s I is one of the most popular method to use to explore existence of clusters on a local scale. Local’s Moran I value of each polygon is interpreted by checking whether it is a positive value or a negative value. Positive local moran’s value of a polygon indicates formation of cluster (high-high or low-low for itself and its neighbors). Negative value ,on the other hand, indicates outliers meaning that the attribute values of the polygon and its neighbors exist on either side of mean value.</p>
 <p>Local moran’s I can be computed by using the code chunk below.</p>
 <div class="cell">
@@ -2407,7 +2407,7 @@ Zuru                       0.4787</code></pre>
 </div>
 </div>
 <section id="mapping-local-morans-i" class="level3">
-<h3 class="anchored" data-anchor-id="mapping-local-morans-i">Mapping Local Moran’s I</h3>
+<h3 class="anchored" data-anchor-id="mapping-local-morans-i">13.1 Mapping Local Moran’s I</h3>
 <p>Nigeria and localMI data will be appended using cbind() method.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>nigeria.localMI <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nigeria,localMI) <span class="sc">%&gt;%</span></span>
@@ -2443,7 +2443,7 @@ Zuru                       0.4787</code></pre>
 </div>
 </section>
 <section id="morans-scatterplot" class="level3">
-<h3 class="anchored" data-anchor-id="morans-scatterplot">Moran’s Scatterplot</h3>
+<h3 class="anchored" data-anchor-id="morans-scatterplot">13.2 Moran’s Scatterplot</h3>
 <p>The Moran scatterplot is an illustration of the relationship between the values of the chosen attribute at each location and the average value of the same attribute at neighboring locations.</p>
 <p>Moran’s scatterplot is plotted by standarized value of chosen attribute on x axis and standardized spatially lagged value (weighted average of neighbors) on y axis.</p>
 <p>scale() function can be used to extract z-standardized values of pct_non-functional field as below.</p>
@@ -2462,7 +2462,7 @@ Zuru                       0.4787</code></pre>
 </div>
 </section>
 <section id="lisa-map-classes" class="level3">
-<h3 class="anchored" data-anchor-id="lisa-map-classes">Lisa Map Classes</h3>
+<h3 class="anchored" data-anchor-id="lisa-map-classes">14 Lisa Map Classes</h3>
 <p>There are four quadrants divided by x~0 and y~0 lines in the Moran’s scatter plot.</p>
 <p>We will define the classes of quadrant by creating the codes below.</p>
 <p>Initialize the quadrant vector</p>
@@ -2538,15 +2538,15 @@ Zuru                       0.4787</code></pre>
 </section>
 </section>
 <section id="hot-spot-and-cold-spot-area-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="hot-spot-and-cold-spot-area-analysis">Hot Spot and Cold Spot Area Analysis</h2>
-<p>Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas. An alternative spatial statistics to detect spatial anomalies is the Getis and Ord's G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values cluster spatially.</p>
+<h2 class="anchored" data-anchor-id="hot-spot-and-cold-spot-area-analysis">15 Hot Spot and Cold Spot Area Analysis</h2>
+<p>Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas. An alternative spatial statistics to detect spatial anomalies is the Getis and Ord’s G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values cluster spatially.</p>
 <p>First of all, weight matrix object wm_B is prepared by passing style argument as B.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>wm_B <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(knn8, </span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">style=</span><span class="st">"B"</span>,<span class="at">zero.policy=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="local-getis-ord-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="local-getis-ord-statistics"><strong>Local Getis-Ord Statistics</strong></h3>
+<h3 class="anchored" data-anchor-id="local-getis-ord-statistics"><strong>15.1 Local Getis-Ord Statistics</strong></h3>
 <p>GI statistics can be calculated in the code chunk below using localG() function of spdep and passing attribute of interest and weight matrix object.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>fips <span class="ot">&lt;-</span> <span class="fu">order</span>(nigeria_1<span class="sc">$</span>shapeName)</span>
@@ -2812,7 +2812,7 @@ attr(,"class")
 </ul>
 </section>
 <section id="local-g-cluster-map-by-significance-level" class="level3">
-<h3 class="anchored" data-anchor-id="local-g-cluster-map-by-significance-level">Local G Cluster Map By Significance Level</h3>
+<h3 class="anchored" data-anchor-id="local-g-cluster-map-by-significance-level">15.2 Local G Cluster Map By Significance Level</h3>
 <p>localG() function of spdep does not return the p-value of each polygon that is required to filter the areas that are not statistically significant. Therefore, we will explore local_g() function of rgeoda to create a more complete cluster map.</p>
 <p>local_g() function does not take sf object as an argument. Hence, we will convert the data to tibble data frame in the code chunk below.</p>
 <div class="cell">
@@ -2827,300 +2827,20 @@ attr(,"class")
 <span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutation_method =</span> <span class="st">"complete"</span>,</span>
 <span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">significance_cutoff =</span> <span class="fl">0.05</span>,</span>
 <span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span></span>
-<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>G</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reference class object of class "LISA"
-Field "gda_lisa":
-An object of class "p_LISA"
-Slot "pointer":
-&lt;pointer: 0x000001ece7c14d10&gt;
-
-Field "p_vals":
-  [1] 0.009 0.008 0.001 0.271 0.002 0.026 0.116 0.138 0.377 0.449 0.411 0.497
- [13] 0.009 0.328 0.020 0.328 0.082 0.483 0.224 0.430 0.001 0.001 0.038 0.038
- [25] 0.255 0.019 0.282 0.199 0.184 0.287 0.001 0.001 0.004 0.051 0.130 0.075
- [37] 0.011 0.134 0.250 0.108 0.413 0.011 0.221 0.357 0.019 0.271 0.004 0.065
- [49] 0.002 0.161 0.001 0.017 0.279 0.007 0.160 0.137 0.123 0.442 0.353 0.001
- [61] 0.001 0.002 0.451 0.089 0.208 0.047 0.222 0.034 0.371 0.063 0.229 0.192
- [73] 0.118 0.110 0.002 0.210 0.028 0.286 0.047 0.179 0.006 0.027 0.001 0.001
- [85] 0.003 0.002 0.138 0.438 0.129 0.496 0.001 0.285 0.364 0.001 0.264 0.382
- [97] 0.259 0.030 0.015 0.341 0.029 0.422 0.450 0.071 0.001 0.227 0.339 0.116
-[109] 0.232 0.001 0.007 0.131 0.030 0.034 0.004 0.389 0.031 0.351 0.450 0.093
-[121] 0.002 0.337 0.034 0.145 0.288 0.061 0.002 0.381 0.088 0.036 0.025 0.001
-[133] 0.466 0.001 0.452 0.009 0.021 0.468 0.076 0.003 0.125 0.003 0.002 0.183
-[145] 0.002 0.001 0.023 0.019 0.438 0.400 0.483 0.258 0.030 0.406 0.085 0.026
-[157] 0.001 0.001 0.059 0.001 0.047 0.003 0.298 0.074 0.010 0.007 0.373 0.012
-[169] 0.003 0.015 0.381 0.220 0.390 0.313 0.197 0.040 0.284 0.297 0.308 0.010
-[181] 0.116 0.306 0.010 0.001 0.153 0.102 0.132 0.423 0.001 0.195 0.086 0.115
-[193] 0.055 0.020 0.014 0.091 0.001 0.001 0.002 0.001 0.002 0.001 0.001 0.459
-[205] 0.003 0.002 0.002 0.001 0.001 0.001 0.006 0.004 0.402 0.147 0.050 0.312
-[217] 0.009 0.119 0.027 0.016 0.383 0.207 0.112 0.027 0.012 0.360 0.008 0.062
-[229] 0.004 0.041 0.125 0.406 0.001 0.035 0.010 0.415 0.469 0.018 0.410 0.391
-[241] 0.001 0.003 0.111 0.038 0.029 0.056 0.010 0.082 0.398 0.001 0.108 0.017
-[253] 0.313 0.154 0.001 0.256 0.217 0.013 0.341 0.017 0.001 0.186 0.280 0.008
-[265] 0.170 0.014 0.017 0.143 0.012 0.251 0.007 0.001 0.050 0.127 0.342 0.184
-[277] 0.078 0.256 0.125 0.028 0.197 0.185 0.115 0.218 0.001 0.001 0.457 0.001
-[289] 0.001 0.001 0.181 0.447 0.041 0.002 0.137 0.187 0.001 0.355 0.202 0.147
-[301] 0.009 0.244 0.046 0.042 0.192 0.002 0.030 0.318 0.001 0.438 0.130 0.006
-[313] 0.022 0.429 0.290 0.465 0.200 0.432 0.447 0.007 0.001 0.001 0.006 0.045
-[325] 0.386 0.003 0.454 0.491 0.459 0.286 0.001 0.005 0.001 0.001 0.003 0.191
-[337] 0.248 0.069 0.135 0.003 0.015 0.214 0.092 0.191 0.306 0.200 0.126 0.320
-[349] 0.418 0.063 0.007 0.184 0.004 0.320 0.149 0.289 0.175 0.372 0.310 0.166
-[361] 0.118 0.007 0.107 0.033 0.471 0.378 0.035 0.355 0.174 0.001 0.012 0.383
-[373] 0.009 0.158 0.002 0.379 0.066 0.342 0.018 0.281 0.057 0.001 0.011 0.084
-[385] 0.011 0.032 0.463 0.001 0.264 0.121 0.304 0.210 0.002 0.005 0.081 0.035
-[397] 0.002 0.002 0.132 0.001 0.347 0.349 0.328 0.127 0.099 0.001 0.067 0.116
-[409] 0.047 0.010 0.034 0.006 0.010 0.002 0.019 0.443 0.227 0.476 0.423 0.491
-[421] 0.132 0.004 0.394 0.150 0.248 0.118 0.140 0.117 0.127 0.060 0.116 0.076
-[433] 0.004 0.021 0.001 0.153 0.043 0.450 0.037 0.001 0.487 0.041 0.001 0.079
-[445] 0.473 0.411 0.001 0.038 0.005 0.007 0.205 0.187 0.026 0.120 0.008 0.338
-[457] 0.299 0.186 0.196 0.266 0.001 0.002 0.407 0.137 0.284 0.087 0.118 0.206
-[469] 0.027 0.292 0.001 0.002 0.458 0.008 0.001 0.047 0.001 0.287 0.001 0.001
-[481] 0.188 0.019 0.016 0.029 0.003 0.013 0.170 0.343 0.018 0.112 0.394 0.001
-[493] 0.294 0.174 0.308 0.022 0.148 0.303 0.001 0.475 0.001 0.184 0.005 0.369
-[505] 0.002 0.120 0.001 0.187 0.001 0.059 0.442 0.118 0.280 0.015 0.001 0.234
-[517] 0.026 0.152 0.009 0.024 0.265 0.170 0.012 0.134 0.001 0.001 0.040 0.394
-[529] 0.002 0.032 0.294 0.008 0.015 0.001 0.313 0.004 0.019 0.001 0.001 0.001
-[541] 0.036 0.477 0.454 0.213 0.287 0.282 0.184 0.001 0.102 0.103 0.005 0.237
-[553] 0.377 0.288 0.323 0.010 0.052 0.341 0.001 0.040 0.043 0.457 0.461 0.176
-[565] 0.063 0.451 0.262 0.482 0.216 0.002 0.096 0.144 0.068 0.233 0.163 0.187
-[577] 0.073 0.002 0.055 0.005 0.060 0.068 0.007 0.005 0.335 0.025 0.001 0.005
-[589] 0.196 0.051 0.240 0.362 0.199 0.301 0.331 0.001 0.044 0.102 0.046 0.003
-[601] 0.074 0.043 0.020 0.001 0.008 0.006 0.274 0.003 0.448 0.162 0.381 0.267
-[613] 0.001 0.160 0.226 0.241 0.001 0.099 0.190 0.007 0.473 0.001 0.002 0.123
-[625] 0.383 0.003 0.007 0.002 0.001 0.016 0.187 0.139 0.079 0.134 0.304 0.009
-[637] 0.173 0.180 0.191 0.042 0.457 0.085 0.015 0.025 0.068 0.349 0.393 0.386
-[649] 0.141 0.080 0.398 0.126 0.382 0.006 0.005 0.390 0.273 0.022 0.117 0.299
-[661] 0.257 0.095 0.073 0.493 0.185 0.211 0.465 0.238 0.002 0.418 0.038 0.089
-[673] 0.153 0.473 0.008 0.025 0.253 0.075 0.038 0.083 0.244 0.001 0.163 0.471
-[685] 0.199 0.292 0.094 0.001 0.015 0.203 0.061 0.006 0.001 0.238 0.120 0.029
-[697] 0.033 0.004 0.122 0.100 0.121 0.200 0.059 0.085 0.001 0.001 0.002 0.054
-[709] 0.003 0.339 0.037 0.005 0.022 0.183 0.335 0.002 0.007 0.001 0.003 0.004
-[721] 0.099 0.002 0.001 0.310 0.003 0.228 0.020 0.325 0.360 0.305 0.024 0.216
-[733] 0.001 0.001 0.314 0.127 0.010 0.002 0.441 0.300 0.359 0.440 0.045 0.009
-[745] 0.001 0.001 0.003 0.370 0.286 0.019 0.364 0.421 0.434 0.453 0.057 0.004
-[757] 0.333 0.085 0.362 0.383 0.107 0.176 0.035 0.005 0.118 0.001 0.001 0.007
-[769] 0.383 0.495 0.144 0.139 0.042 0.243
-Field "c_vals":
-  [1] 1 1 2 0 1 2 0 0 0 0 0 0 1 0 2 0 0 0 0 0 1 2 2 1 0 2 0 0 0 0 1 2 2 0 0 0 1
- [38] 0 0 0 0 1 0 0 1 0 2 0 2 0 2 2 0 2 0 0 0 0 0 1 1 2 0 0 0 1 0 2 0 0 0 0 0 0
- [75] 2 0 2 0 2 0 2 2 2 1 2 1 0 0 0 0 2 0 0 1 0 0 0 2 2 0 2 0 0 0 2 0 0 0 0 2 2
-[112] 0 1 2 2 0 2 0 0 0 1 0 1 0 0 0 2 0 0 2 1 2 0 1 0 1 1 0 0 2 0 2 2 0 2 2 2 1
-[149] 0 0 0 0 2 0 0 2 2 1 0 2 2 1 0 0 2 2 0 2 1 2 0 0 0 0 0 2 0 0 0 1 0 0 1 1 0
-[186] 0 0 0 2 0 0 0 0 2 2 0 1 1 1 1 1 1 1 0 1 1 2 1 1 1 1 1 0 0 2 0 2 0 2 1 0 0
-[223] 0 1 2 0 2 0 2 2 0 0 2 2 2 0 0 2 0 0 2 2 0 2 1 0 1 0 0 2 0 2 0 0 2 0 0 2 0
-[260] 2 2 0 0 2 0 2 2 0 1 0 2 2 2 0 0 0 0 0 0 1 0 0 0 0 1 1 0 1 1 1 0 0 2 2 0 0
-[297] 2 0 0 0 1 0 1 1 0 2 1 0 2 0 0 1 2 0 0 0 0 0 0 1 1 1 1 2 0 2 0 0 0 0 1 2 1
-[334] 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 0 0 2 0 1 0 0 1 0 0 1
-[371] 1 0 2 0 1 0 0 0 2 0 0 2 2 0 2 1 0 2 0 0 0 0 1 2 0 1 1 2 0 2 0 0 0 0 0 2 0
-[408] 0 2 2 2 2 2 2 2 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 2 2 2 0 1 0 1 2 0 1 2 0
-[445] 0 0 2 2 2 2 0 0 2 0 1 0 0 0 0 0 2 2 0 0 0 0 0 0 2 0 1 2 0 2 2 1 2 0 2 2 0
-[482] 1 2 1 2 2 0 0 2 0 0 2 0 0 0 2 0 0 1 0 2 0 2 0 1 0 2 0 2 0 0 0 0 2 2 0 1 0
-[519] 2 1 0 0 1 0 2 2 1 0 2 2 0 2 2 2 0 2 2 1 1 1 2 0 0 0 0 0 0 1 0 0 1 0 0 0 0
-[556] 1 0 0 1 1 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 2 0 0 1 1 0 1 1 1 0 0 0 0
-[593] 0 0 0 1 1 0 1 1 0 2 2 1 1 1 0 1 0 0 0 0 1 0 0 0 1 0 0 1 0 2 2 0 0 1 1 1 1
-[630] 1 0 0 0 0 0 2 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0 0 2 2 0 0 2 0 0 0 0 0 0 0 0
-[667] 0 0 1 0 2 0 0 0 2 2 0 0 2 0 0 2 0 0 0 0 0 1 2 0 0 1 2 0 0 2 2 2 0 0 0 0 0
-[704] 0 2 2 2 0 1 0 2 2 2 0 0 2 1 1 1 1 0 1 1 0 1 0 1 0 0 0 2 0 1 1 0 0 1 1 0 0
-[741] 0 0 2 2 1 1 1 0 0 2 0 0 0 0 0 1 0 0 0 0 0 0 2 2 0 2 2 2 0 0 0 0 2 0
-Field "lisa_vals":
-  [1] 1.927592e-03 2.033912e-03 0.000000e+00 1.441105e-03 2.174540e-03
-  [6] 7.834012e-04 9.841734e-04 1.023908e-03 1.179528e-03 1.340122e-03
- [11] 1.329687e-03 1.286604e-03 2.001467e-03 1.160706e-03 7.365922e-04
- [16] 1.171719e-03 9.173765e-04 1.284275e-03 1.100543e-03 1.252991e-03
- [21] 2.293675e-03 5.204065e-04 8.204729e-04 1.760358e-03 1.465093e-03
- [26] 7.549514e-04 1.428844e-03 1.533558e-03 1.052966e-03 1.149424e-03
- [31] 2.109336e-03 4.561976e-04 5.599293e-04 1.746651e-03 9.915501e-04
- [36] 1.666550e-03 1.933237e-03 1.580789e-03 1.482726e-03 1.596333e-03
- [41] 1.356010e-03 1.938195e-03 1.073177e-03 1.381257e-03 1.831117e-03
- [46] 1.462685e-03 5.269221e-04 1.695525e-03 4.589933e-04 1.557298e-03
- [51] 4.916676e-04 7.745782e-04 1.156936e-03 6.399301e-04 1.556443e-03
- [56] 1.011712e-03 1.598534e-03 1.235735e-03 1.201365e-03 2.219776e-03
- [61] 2.467857e-03 5.122148e-04 1.268956e-03 1.654273e-03 1.493863e-03
- [66] 1.755215e-03 1.475437e-03 7.878775e-04 1.384382e-03 1.737212e-03
- [71] 1.478369e-03 1.053224e-03 9.863884e-04 1.625970e-03 4.810294e-04
- [76] 1.528580e-03 7.869690e-04 1.143327e-03 8.658276e-04 1.043858e-03
- [81] 7.034606e-04 8.096509e-04 4.912122e-04 2.195899e-03 5.656154e-04
- [86] 2.171706e-03 1.009291e-03 1.233252e-03 9.770002e-04 1.273195e-03
- [91] 1.094858e-04 1.123354e-03 1.205910e-03 2.313160e-03 1.107469e-03
- [96] 1.217241e-03 1.120058e-03 8.015254e-04 7.649890e-04 1.412029e-03
-[101] 7.788503e-04 1.238441e-03 1.326663e-03 1.687050e-03 4.810555e-04
-[106] 1.502836e-03 1.392170e-03 9.716308e-04 1.503590e-03 5.359206e-04
-[111] 6.400964e-04 1.603870e-03 1.796430e-03 8.391897e-04 6.431509e-04
-[116] 1.244698e-03 7.972295e-04 1.391146e-03 1.322363e-03 1.627838e-03
-[121] 2.135398e-03 1.155610e-03 1.792653e-03 1.582840e-03 1.452350e-03
-[126] 1.718780e-03 6.059013e-04 1.218116e-03 9.513402e-04 7.853573e-04
-[131] 1.849819e-03 4.689443e-04 1.259237e-03 2.305352e-03 1.328730e-03
-[136] 1.976585e-03 1.880410e-03 1.288434e-03 9.294128e-04 4.908129e-04
-[141] 1.562567e-03 5.983812e-04 4.150710e-04 1.036352e-03 5.002876e-04
-[146] 2.100219e-04 7.476859e-04 1.888585e-03 1.337547e-03 1.199703e-03
-[151] 1.276577e-03 1.458686e-03 7.981401e-04 1.223732e-03 9.353039e-04
-[156] 7.891967e-04 4.425438e-04 2.161929e-03 8.920349e-04 1.094858e-04
-[161] 8.607866e-04 2.069983e-03 1.430851e-03 1.699019e-03 6.900888e-04
-[166] 6.215881e-04 1.382218e-03 6.791626e-04 2.080439e-03 7.338836e-04
-[171] 1.365314e-03 1.486385e-03 1.365801e-03 1.408876e-03 1.519327e-03
-[176] 8.169275e-04 1.133013e-03 1.139575e-03 1.160551e-03 1.894088e-03
-[181] 1.614953e-03 1.176802e-03 1.968772e-03 2.433207e-03 1.585904e-03
-[186] 1.649326e-03 1.579059e-03 1.351550e-03 5.196939e-04 1.070960e-03
-[191] 9.042057e-04 1.614605e-03 9.100780e-04 7.740427e-04 7.346588e-04
-[196] 9.343972e-04 2.164926e-03 2.358982e-03 2.090745e-03 2.135278e-03
-[201] 2.101377e-03 2.397137e-03 2.466903e-03 1.303501e-03 2.023332e-03
-[206] 2.078599e-03 5.165769e-04 2.564138e-03 2.266815e-03 2.114075e-03
-[211] 1.936044e-03 2.098371e-03 1.215968e-03 1.009553e-03 8.432846e-04
-[216] 1.424837e-03 6.738392e-04 9.794854e-04 7.630230e-04 1.850571e-03
-[221] 1.199914e-03 1.512777e-03 9.813357e-04 1.851343e-03 6.824553e-04
-[226] 1.387877e-03 7.100261e-04 1.694101e-03 5.776305e-04 8.062130e-04
-[231] 9.948494e-04 1.228653e-03 4.955285e-04 7.974672e-04 6.604132e-04
-[236] 1.344400e-03 1.309506e-03 7.463322e-04 1.355609e-03 1.371867e-03
-[241] 2.804832e-04 5.695451e-04 9.767693e-04 8.230688e-04 1.825624e-03
-[246] 8.727611e-04 1.924094e-03 9.162757e-04 1.354248e-03 2.229641e-04
-[251] 1.627426e-03 7.146274e-04 1.174623e-03 1.567804e-03 4.495653e-04
-[256] 1.462944e-03 1.511399e-03 6.900344e-04 1.172954e-03 7.562662e-04
-[261] 9.995104e-05 1.531102e-03 1.441162e-03 6.873276e-04 1.554532e-03
-[266] 7.258644e-04 7.281099e-04 1.594609e-03 1.862401e-03 1.117922e-03
-[271] 6.632090e-04 3.298973e-04 8.526151e-04 1.578121e-03 1.192467e-03
-[276] 1.038470e-03 9.358055e-04 1.122226e-03 9.598031e-04 1.825796e-03
-[281] 1.075045e-03 1.042050e-03 9.828668e-04 1.084832e-03 2.370440e-03
-[286] 2.343493e-03 1.321493e-03 2.351161e-03 2.131041e-03 2.048980e-03
-[291] 1.042226e-03 1.253363e-03 8.478151e-04 5.669123e-04 9.888019e-04
-[296] 1.536782e-03 4.205927e-04 1.398772e-03 1.536930e-03 1.582054e-03
-[301] 1.947120e-03 1.461187e-03 1.741329e-03 1.760642e-03 1.528122e-03
-[306] 6.095420e-04 1.828011e-03 1.409922e-03 3.222283e-04 1.320922e-03
-[311] 1.023928e-03 2.015437e-03 7.814447e-04 1.346205e-03 1.433885e-03
-[316] 1.260151e-03 1.099284e-03 1.228378e-03 1.331994e-03 1.948453e-03
-[321] 2.301588e-03 2.196951e-03 1.956536e-03 8.459840e-04 1.216092e-03
-[326] 5.289395e-04 1.340536e-03 1.291530e-03 1.264155e-03 1.123778e-03
-[331] 2.313742e-03 6.189040e-04 2.359948e-03 2.269420e-03 2.033952e-03
-[336] 1.063414e-03 1.123444e-03 1.714817e-03 1.614825e-03 1.988756e-03
-[341] 1.855630e-03 1.503814e-03 1.616760e-03 1.536824e-03 1.426297e-03
-[346] 1.516088e-03 1.596259e-03 1.410121e-03 1.230567e-03 8.898024e-04
-[351] 2.010618e-03 1.068136e-03 2.090651e-03 1.173400e-03 1.568833e-03
-[356] 1.439983e-03 1.536769e-03 1.390379e-03 1.143096e-03 1.559025e-03
-[361] 9.758191e-04 6.311704e-04 9.672376e-04 1.796942e-03 1.314363e-03
-[366] 1.387328e-03 1.806048e-03 1.379760e-03 1.547516e-03 2.131914e-03
-[371] 1.890146e-03 1.380853e-03 6.963154e-04 1.050951e-03 2.130676e-03
-[376] 1.211780e-03 8.949671e-04 1.163612e-03 7.336609e-04 1.429870e-03
-[381] 8.838008e-04 2.140964e-04 7.057591e-04 9.111873e-04 6.928691e-04
-[386] 1.817775e-03 1.321779e-03 1.135777e-04 1.125150e-03 9.672175e-04
-[391] 1.144285e-03 1.075977e-03 2.060749e-03 6.242496e-04 1.675234e-03
-[396] 1.773469e-03 2.023192e-03 5.471205e-04 1.000528e-03 3.666000e-04
-[401] 1.394583e-03 1.176178e-03 1.404591e-03 9.815123e-04 9.551675e-04
-[406] 0.000000e+00 1.696736e-03 1.603673e-03 8.821537e-04 6.445364e-04
-[411] 8.253694e-04 6.586997e-04 6.680935e-04 5.075249e-04 7.216225e-04
-[416] 1.335717e-03 1.502312e-03 1.284129e-03 1.338960e-03 1.286313e-03
-[421] 1.598696e-03 5.943727e-04 1.361427e-03 1.022517e-03 1.466993e-03
-[426] 9.744917e-04 1.571935e-03 1.636457e-03 1.604707e-03 1.695730e-03
-[431] 9.509789e-04 1.699246e-03 4.684477e-04 7.433916e-04 4.882818e-04
-[436] 1.574785e-03 1.755113e-03 1.327408e-03 1.749803e-03 3.320016e-04
-[441] 1.299396e-03 1.759500e-03 4.239747e-04 9.212097e-04 1.305022e-03
-[446] 1.360511e-03 0.000000e+00 8.350386e-04 6.490814e-04 7.249952e-04
-[451] 1.076195e-03 1.524222e-03 7.982184e-04 1.574844e-03 1.956313e-03
-[456] 1.419889e-03 1.156979e-03 1.038742e-03 1.512970e-03 1.122887e-03
-[461] 3.789019e-04 4.474464e-04 1.246087e-03 9.970138e-04 1.137243e-03
-[466] 1.656301e-03 9.918836e-04 1.517341e-03 7.639557e-04 1.429479e-03
-[471] 2.035478e-03 5.926548e-04 1.320944e-03 6.340755e-04 1.230131e-04
-[476] 1.761631e-03 1.577376e-04 1.437756e-03 2.094596e-04 4.511879e-04
-[481] 1.535549e-03 1.908075e-03 7.310959e-04 1.831784e-03 5.535556e-04
-[486] 7.611475e-04 1.040965e-03 1.162432e-03 7.717125e-04 1.611338e-03
-[491] 1.219074e-03 0.000000e+00 1.437804e-03 1.531034e-03 1.434827e-03
-[496] 7.733384e-04 1.012185e-03 1.150078e-03 2.396433e-03 1.315513e-03
-[501] 3.224164e-04 1.039439e-03 6.838560e-04 1.200916e-03 2.316029e-03
-[506] 1.612403e-03 9.995104e-05 1.512638e-03 1.094858e-04 1.715370e-03
-[511] 1.261844e-03 9.805229e-04 1.134411e-03 7.423621e-04 2.863705e-04
-[516] 1.490547e-03 1.805270e-03 1.009078e-03 6.932921e-04 1.839802e-03
-[521] 1.467561e-03 1.562135e-03 1.887913e-03 1.600336e-03 1.094858e-04
-[526] 2.229641e-04 1.740772e-03 1.210479e-03 5.391965e-04 7.876099e-04
-[531] 1.147554e-03 6.756112e-04 7.205454e-04 4.658011e-04 1.178974e-03
-[536] 5.299849e-04 7.228329e-04 2.414552e-03 2.351841e-03 2.266911e-03
-[541] 8.394850e-04 1.278582e-03 1.237289e-03 1.054263e-03 1.447084e-03
-[546] 1.463407e-03 1.532379e-03 2.088655e-03 9.433290e-04 1.623894e-03
-[551] 2.024675e-03 1.477522e-03 1.198337e-03 1.439602e-03 1.157676e-03
-[556] 1.879535e-03 1.753588e-03 1.389600e-03 2.214546e-03 1.745880e-03
-[561] 1.754942e-03 1.317871e-03 1.300663e-03 1.048907e-03 1.702150e-03
-[566] 1.327875e-03 1.135975e-03 1.280383e-03 1.098954e-03 2.077114e-03
-[571] 9.570184e-04 1.595402e-03 9.039620e-04 1.482298e-03 1.044483e-03
-[576] 1.045877e-03 9.040242e-04 2.116237e-03 8.814092e-04 5.514669e-04
-[581] 8.754408e-04 1.691491e-03 1.983646e-03 2.027050e-03 1.184898e-03
-[586] 1.855871e-03 2.330586e-03 2.024128e-03 1.519943e-03 8.466089e-04
-[591] 1.090433e-03 1.210538e-03 1.511947e-03 1.154826e-03 1.186173e-03
-[596] 2.171012e-03 1.765298e-03 9.651184e-04 1.748927e-03 2.059704e-03
-[601] 8.946461e-04 8.345657e-04 7.498260e-04 2.350582e-03 2.013640e-03
-[606] 2.005011e-03 1.121855e-03 2.085393e-03 1.317768e-03 1.557012e-03
-[611] 1.209795e-03 1.470152e-03 2.439401e-03 1.026684e-03 1.106396e-03
-[616] 1.111419e-03 2.411741e-03 9.592109e-04 1.066303e-03 1.958988e-03
-[621] 1.276548e-03 5.223855e-04 4.412832e-04 1.617540e-03 1.365855e-03
-[626] 2.110213e-03 1.950964e-03 2.031150e-03 2.144707e-03 1.864146e-03
-[631] 1.058006e-03 1.035437e-03 9.076691e-04 1.603471e-03 1.428821e-03
-[636] 6.834426e-04 1.542808e-03 1.049307e-03 1.062609e-03 1.753684e-03
-[641] 1.325589e-03 9.217024e-04 1.868209e-03 1.849060e-03 9.221191e-04
-[646] 1.187774e-03 1.353937e-03 1.205592e-03 1.584486e-03 8.987170e-04
-[651] 1.227155e-03 1.608907e-03 1.222243e-03 6.629692e-04 5.156964e-04
-[656] 1.356301e-03 1.131611e-03 7.586895e-04 1.598157e-03 1.132630e-03
-[661] 1.115401e-03 9.380468e-04 1.659575e-03 1.311270e-03 1.050226e-03
-[666] 1.055156e-03 1.269387e-03 1.469322e-03 2.166745e-03 1.343077e-03
-[671] 8.473035e-04 1.651798e-03 1.583307e-03 1.311041e-03 6.875680e-04
-[676] 7.909034e-04 1.124380e-03 9.160967e-04 8.299727e-04 1.670231e-03
-[681] 1.468488e-03 3.378626e-04 1.548524e-03 1.277250e-03 1.527315e-03
-[686] 1.461019e-03 9.229917e-04 2.230788e-03 7.167423e-04 1.491570e-03
-[691] 8.752819e-04 1.986079e-03 4.681399e-04 1.505229e-03 1.588829e-03
-[696] 7.989287e-04 8.046219e-04 5.680490e-04 1.601863e-03 9.488822e-04
-[701] 1.601987e-03 1.534365e-03 8.738841e-04 1.653775e-03 3.760469e-04
-[706] 5.225649e-04 5.492615e-04 8.972134e-04 2.059381e-03 1.177413e-03
-[711] 8.486166e-04 6.334228e-04 7.591660e-04 1.048207e-03 1.174354e-03
-[716] 5.546394e-04 1.991802e-03 2.399944e-03 2.095822e-03 2.043977e-03
-[721] 1.656252e-03 2.224524e-03 2.376550e-03 1.429561e-03 2.071951e-03
-[726] 1.504377e-03 1.830666e-03 1.155855e-03 1.373036e-03 1.408986e-03
-[731] 7.529166e-04 1.509891e-03 2.231417e-03 2.387733e-03 1.404897e-03
-[736] 1.594949e-03 1.906233e-03 2.395785e-03 1.252393e-03 1.451021e-03
-[741] 1.385400e-03 1.330353e-03 8.514664e-04 6.731653e-04 2.199779e-03
-[746] 2.172533e-03 2.081516e-03 1.203143e-03 1.151592e-03 7.303264e-04
-[751] 1.389143e-03 1.231031e-03 1.246333e-03 1.250356e-03 1.701088e-03
-[756] 1.987227e-03 1.396845e-03 9.135464e-04 1.406631e-03 1.206002e-03
-[761] 1.639093e-03 1.525148e-03 8.239497e-04 6.345456e-04 9.519173e-04
-[766] 3.803285e-04 4.654327e-04 6.628725e-04 1.375952e-03 1.296500e-03
-[771] 1.586422e-03 1.013099e-03 8.715216e-04 1.482376e-03
-Field "nn_vals":
-  [1] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
- [38] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
- [75] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[112] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[149] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[186] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[223] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[260] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[297] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[334] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[371] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[408] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[445] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[482] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[519] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[556] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[593] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[630] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[667] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[704] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-[741] 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-Field "labels":
-[1] "Not significant" "High-High"       "Low-Low"         "Undefined"      
-[5] "Isolated"       
-Field "colors":
-[1] "#eeeeee" "#FF0000" "#0000FF" "#464646" "#999999"</code></pre>
-</div>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we will extract colors, labels and clusters from G and afterwards use plot() method to plot local G cluster map.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>lisa_colors <span class="ot">&lt;-</span> <span class="fu">lisa_colors</span>(G)</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>lisa_labels <span class="ot">&lt;-</span> <span class="fu">lisa_labels</span>(G)</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>lisa_clusters <span class="ot">&lt;-</span> <span class="fu">lisa_clusters</span>(G)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>lisa_colors <span class="ot">&lt;-</span> <span class="fu">lisa_colors</span>(G)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>lisa_labels <span class="ot">&lt;-</span> <span class="fu">lisa_labels</span>(G)</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>lisa_clusters <span class="ot">&lt;-</span> <span class="fu">lisa_clusters</span>(G)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">st_geometry</span>(nigeria), </span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="fu">sapply</span>(lisa_clusters, <span class="cf">function</span>(x){<span class="fu">return</span>(lisa_colors[[x<span class="sc">+</span><span class="dv">1</span>]])}), </span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#333333"</span>, <span class="at">lwd=</span><span class="fl">0.2</span>)</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Local G Cluster Map"</span>)</span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> lisa_labels, <span class="at">fill =</span> lisa_colors, <span class="at">border =</span> <span class="st">"#eeeeee"</span>,<span class="at">text.font=</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">st_geometry</span>(nigeria), </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="fu">sapply</span>(lisa_clusters, <span class="cf">function</span>(x){<span class="fu">return</span>(lisa_colors[[x<span class="sc">+</span><span class="dv">1</span>]])}), </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#333333"</span>, <span class="at">lwd=</span><span class="fl">0.2</span>)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Local G Cluster Map"</span>)</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> lisa_labels, <span class="at">fill =</span> lisa_colors, <span class="at">border =</span> <span class="st">"#eeeeee"</span>,<span class="at">text.font=</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Take_Home_Ex01test_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -3134,30 +2854,30 @@ Field "colors":
 </ul>
 </section>
 <section id="local-g-cluster-map-by-significance-level-1" class="level3">
-<h3 class="anchored" data-anchor-id="local-g-cluster-map-by-significance-level-1">Local G* Cluster Map By Significance Level</h3>
+<h3 class="anchored" data-anchor-id="local-g-cluster-map-by-significance-level-1">15.3 Local G* Cluster Map By Significance Level</h3>
 <p>GI* statistics is the ratio of the weighted average of the neighboring locations to the sum of all values, including the value at the location while G statistics does not include the value at the location itself.</p>
 <p>The same process used in local GI can be repeated for this computation. This time, local_gstar() function is used instead to calculate GI* and its pseudo p values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>Gstar <span class="ot">&lt;-</span> <span class="fu">local_gstar</span>(</span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">knn_weights</span>(nigeria, <span class="dv">8</span>),</span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">"pct_non.functional"</span>],</span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutations =</span> <span class="dv">999</span>,</span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutation_method =</span> <span class="st">"complete"</span>,</span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">significance_cutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span></span>
-<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>Gstar <span class="ot">&lt;-</span> <span class="fu">local_gstar</span>(</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">knn_weights</span>(nigeria, <span class="dv">8</span>),</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  df[<span class="st">"pct_non.functional"</span>],</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutations =</span> <span class="dv">999</span>,</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">permutation_method =</span> <span class="st">"complete"</span>,</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">significance_cutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span></span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>lisa_colors_star <span class="ot">&lt;-</span> <span class="fu">lisa_colors</span>(Gstar)</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>lisa_labels_star <span class="ot">&lt;-</span> <span class="fu">lisa_labels</span>(Gstar)</span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>lisa_clusters_star <span class="ot">&lt;-</span> <span class="fu">lisa_clusters</span>(Gstar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>lisa_colors_star <span class="ot">&lt;-</span> <span class="fu">lisa_colors</span>(Gstar)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>lisa_labels_star <span class="ot">&lt;-</span> <span class="fu">lisa_labels</span>(Gstar)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>lisa_clusters_star <span class="ot">&lt;-</span> <span class="fu">lisa_clusters</span>(Gstar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">st_geometry</span>(nigeria), </span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="fu">sapply</span>(lisa_clusters_star, <span class="cf">function</span>(x){<span class="fu">return</span>(lisa_colors_star[[x<span class="sc">+</span><span class="dv">1</span>]])}), </span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#333333"</span>, <span class="at">lwd=</span><span class="fl">0.2</span>)</span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Local G* Cluster Map"</span>)</span>
-<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> lisa_labels_star, <span class="at">fill =</span> lisa_colors_star, <span class="at">border =</span> <span class="st">"#eeeeee"</span>,<span class="at">text.font=</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">st_geometry</span>(nigeria), </span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="fu">sapply</span>(lisa_clusters_star, <span class="cf">function</span>(x){<span class="fu">return</span>(lisa_colors_star[[x<span class="sc">+</span><span class="dv">1</span>]])}), </span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#333333"</span>, <span class="at">lwd=</span><span class="fl">0.2</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Local G* Cluster Map"</span>)</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'bottomright'</span>, <span class="at">legend =</span> lisa_labels_star, <span class="at">fill =</span> lisa_colors_star, <span class="at">border =</span> <span class="st">"#eeeeee"</span>,<span class="at">text.font=</span><span class="dv">1</span>, <span class="at">cex=</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Take_Home_Ex01test_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid" width="672"></p>
 </div>
