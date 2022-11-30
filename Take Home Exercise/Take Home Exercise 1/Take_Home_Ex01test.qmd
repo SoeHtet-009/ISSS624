@@ -1,0 +1,630 @@
+---
+title: "Take Home Exercise 1"
+editor: visual
+---
+
+## Overview
+
+Water is an important resource to mankind. Clean and accessible water is critical to human health. It provides a healthy environment, a sustainable economy, reduces poverty and ensures peace and security. Yet over 40% of the global population does not have access to sufficient clean water. By 2025, 1.8 billion people will be living in countries or regions with absolute water scarcity, according to UN-Water. The lack of water poses a major threat to several sectors, including food security. Agriculture uses about 70% of the world's accessible freshwater.
+
+Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, we will apply appropriate global and local measures of spatial Association techniques to reveals the spatial patterns of non-functional water points. Nigeria will be the country of study for this assignment.
+
+## Getting Started
+
+Firstly, we will install libraries below for data wrangling and geospatial analysis purposes.
+
+```{r}
+pacman::p_load(spdep,tidyverse,tmap,sf,funModeling,rgeoda)
+```
+
+## Importing Geospatial Data
+
+To import a shapefile object, st_read() function of sf package can be used as shown in the code chunk below.
+
+```{r}
+nigeria_1 <- st_read(dsn = "geospatial", 
+                 layer = "geoBoundaries-NGA-ADM2",
+                 crs = 4326)
+nigeria_1
+```
+
+The imported file has WGS 84 coordinate system,774 rows and five columns including multipolygon geometry coordinates.
+
+Shapename column of sf object will be analyzed to check if there are any duplicates.
+
+```{r}
+duplicates <-nigeria_1[duplicated(nigeria_1$shapeName), ]
+duplicates
+```
+
+The above summary reveals that 6 secondary administrative appear more than once in the data. However, upon further checking, geometries of duplicate shape names are found to be different. Thus, it will not be deleted to prevent loss of information.
+
+Nevertheless, as duplicated shape names can pose problems in subsequent analysis, we will rename the names as below.
+
+```{r}
+nigeria_1[95,"shapeName"] <- "Bassa1"
+nigeria_1[305,"shapeName"] <- "Ifelodun1"
+nigeria_1[356,"shapeName"] <- "Irepodun1"
+nigeria_1[520,"shapeName"] <- "Nasarawa1"
+nigeria_1[547,"shapeName"] <- "Obi1"
+nigeria_1[694,"shapeName"] <- "Surulere1"
+```
+
+Now, another check is done to ensure there is no more duplicate.
+
+```{r}
+duplicates <-nigeria_1[duplicated(nigeria_1$shapeName), ]
+duplicates
+```
+
+## Importing Attribute Data
+
+To import csv fiile, read.csv() function can be utilized. The data has been cleaned beforehand to filter the country to include Nigeria only. Otherwise, filter() function of dplyr can be used to exclude all the other countries.
+
+```{r}
+nigeria_2 <- read.csv("Nigeria_Att.csv")
+```
+
+Tibble dataframe is transformed to sf data table in code chunk below.
+
+```{r}
+nigeria_2 <- st_as_sf(nigeria_2, 
+                       coords = c("lon_deg", "lat_deg"),
+                       crs=4326) 
+```
+
+The column we are interested in "status_clean" is found to contain blank values. They will be replace with text "unknown" as seen in the code chunk below.
+
+```{r}
+nigeria_2$status_clean[nigeria_2$status_clean==""] = "Unknown"
+```
+
+## EDA
+
+In the code chunk below, `freq()` of **funModeling** package is used to display the distribution of *status_clean* field in *attribute data set nigeria_2*.
+
+```{r}
+freq(data=nigeria_2, 
+     input = 'status_clean')
+```
+
+## Extracting Water Point Data
+
+In this section, we will learn how to classify functional and non-functional water points in attribute data.
+
+### Extracting Functional Water Points
+
+Dplyr's function filter() is used to classify functional water points and proportion is plotted after filtering.
+
+```{r}
+functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Functional",
+                             "Functional but needs repair",
+                             "Functional but not in use"))
+freq(data=functional, 
+     input = 'status_clean')
+```
+
+### Extracting Non-functional Water Points
+
+Likewise, non-functional water points are extracted by using the following texts in status_clean field.
+
+```{r}
+Non_functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Non-Functional",
+                             "Non-Functional due to dry season",
+                             "Non functional but not in use",
+                             "Abandoned/Decommissioned",
+                             "Abandoned"))
+freq(data=Non_functional, 
+     input = 'status_clean')
+```
+
+### Extracting Unknown Status Water Point
+
+Lastly, the following code chunk is used to extract unknown status.
+
+```{r}
+Unknown <- nigeria_2 %>%
+  filter(status_clean == "Unknown")
+```
+
+## Performing Point In Polygon Count
+
+The following code chunk is used to calculate how many total, functional, non-functional and unknown water points are present in each polygon.
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`total_wpt` = lengths(
+    st_intersects(nigeria_1, nigeria_2))) %>%
+  mutate(`wpt_functional` = lengths(
+    st_intersects(nigeria_1, functional))) %>%
+  mutate(`wpt_non-functional` = lengths(
+    st_intersects(nigeria_1, Non_functional))) %>%
+  mutate(`wpt_unknown` = lengths(
+    st_intersects(nigeria_1, Unknown)))
+```
+
+## Saving Analytical Data
+
+Afterwards, percentage of functional and non-functional water points in each polygon are computed by dividing with total water points.
+
+```{r}
+nigeria_1 <- nigeria_1 %>%
+  mutate(pct_functional = `wpt_functional`/`total_wpt`) %>%
+  mutate(`pct_non-functional` = `wpt_non-functional`/`total_wpt`) 
+```
+
+Things to learn from the code chunk above:
+
+-   `mutate()` of **dplyr** package is used to derive two fields namely *pct_functional* and *pct_non-functional*
+
+```{r}
+write_rds(nigeria_1, "nigeria_1.rds")
+```
+
+## Visualizing Spatial Distribution of Water Points
+
+```{r}
+nigeria_1 <- read_rds("nigeria_1.rds")
+
+total <- qtm(nigeria_1, "total_wpt")+
+         tm_layout(legend.height=0.35,
+         legend.width=0.45)
+wp_functional <- qtm(nigeria_1, "wpt_functional")+
+                 tm_layout(legend.height=0.35,
+                 legend.width=0.45)
+wp_nonfunctional <- qtm(nigeria_1, "wpt_non-functional")+
+                    tm_layout(legend.height=0.35,
+                    legend.width=0.45)
+unknown <- qtm(nigeria_1, "wpt_unknown")+
+           tm_layout(legend.height=0.35,
+           legend.width=0.45)
+
+tmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=0, ncol=2)
+```
+
+## Visualizing Spatial Distribution of Water Points %
+
+```{r}
+pct_functional <- qtm(nigeria_1, "pct_functional")+
+         tm_layout(legend.height=0.25,
+         legend.width=0.35)
+pct_non <- qtm(nigeria_1,"pct_non-functional")+
+                 tm_layout(legend.height=0.25,
+                 legend.width=0.35)
+
+tmap_arrange(pct_functional,pct_non,asp=1, ncol=2)
+```
+
+Interestingly, after plotting the above, it can be observed that there are missing values for percentage attributes.
+
+It will be further analyzed in detail in the code chunk below.
+
+```{r}
+nigeria_1[is.nan(nigeria_1$`pct_non-functional`) ,]
+```
+
+Things to note from result above:
+
+There are 13 rows that has no water point in their corresponding polygons, therefore giving rise to NaN values in percentage fields.
+
+NaN values in pct_non-functional field will be recoded as 0 in the code chunk below for easier analysis.
+
+```{r}
+nigeria_1["pct_non-functional"][is.na(nigeria_1["pct_non-functional"])] <- 0
+```
+
+## Computation of Spatial Weight Matrix
+
+Weight matrix can be computed in various methods. Firstly, queen contiguity based weight is computed below.
+
+```{r}
+wm <- poly2nb(nigeria_1, 
+              queen=TRUE)
+wm
+```
+
+In above summary, it is observed that there is a region with no neighbor when using contiguity method. Furthermore, there is a wide range of polygon sizes across Nigeria map. Hence, fixed distance or adaptive distance weights are more suitable choices for this analysis.
+
+To use distanced based weight matrix, we need to transform coordinate system to projected coordinate system by using st_transform() and setting crs as 26391 for nigeria. Afterwards, we will compute coordinates of polygons' centroids.
+
+```{r}
+nigeria <- st_transform(nigeria_1,crs=26391)
+nigeria
+```
+
+```{r}
+longitude <- map_dbl(nigeria$geometry, ~st_centroid(.x)[[1]])
+latitude <- map_dbl(nigeria$geometry, ~st_centroid(.x)[[2]])
+coords <- cbind(longitude, latitude)
+head(coords)
+```
+
+The following code chunk is used to determine the maximum distance of nearest neighbors.
+
+```{r}
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords))
+summary(k1dists)
+```
+
+To ensure each polygon has at least one neighbor, upper limit distance is set at 72200 which is slightly higher than maximum distance.
+
+```{r}
+wm_fixed <- dnearneigh(coords, 0, 72200)
+summary(wm_fixed)
+```
+
+Plot of fixed distance based neighbors is displayed below.
+
+```{r}
+plot(nigeria$geometry, border="lightgrey")
+plot(wm_fixed, coords, add=TRUE)
+plot(k1, coords, add=TRUE, col="red", length=0.08)
+```
+
+One of the characteristics of fixed distance weight matrix is that more densely settled areas (usually the urban areas) tend to have more neighbors and the less densely settled areas (usually the rural counties) tend to have lesser neighbors. Having many neighbors smoothes the neighbor relationship across more neighbors.
+
+To control the number of neighbors, k=*number of neighbors* can be passed when creating list object as shown below.
+
+```{r}
+knn8 <- knn2nb(knearneigh(coords, k=8))
+knn8
+```
+
+Plot of 8 k-nearest neighbors weight matrix is displayed below.
+
+```{r}
+plot(nigeria$geometry, border="lightgrey")
+plot(knn8, coords, pch = 19, cex = 0.6, add = TRUE, col = "red")
+```
+
+Next, we need to assign weights to each neighboring polygon. In our case, each neighboring polygon will be assigned equal weight (style="W"). This is accomplished by assigning the fraction 1/(#ofneighbors) to each neighboring county then summing the weighted income values. While this is the most intuitive way to summaries the neighbors' values it has one drawback in that polygons along the edges of the study area will base their lagged values on fewer polygons thus potentially over- or under-estimating the true nature of the spatial autocorrelation in the data. For this example, we'll stick with the style="W" option for simplicity's sake but note that other more robust options are available, notably style="B".
+
+```{r}
+rswm <- nb2listw(knn8, 
+                style="W",zero.policy=TRUE)
+```
+
+## Global Spatial Autocorrelation
+
+### Global Spatial Autocorrelation : Moran's I
+
+Global Moran's I is a statistical test that indicates spatial and attribute similarity. Under randomization, Moran's I value is approximately zero. Therefore, positive Moran's I value is interpreted as attribute similarity pattern (positive spatial autocorrelation) across the map while negative Moran's I value shows checker board pattern (alternate low and high) across the map.
+
+```{r}
+moran.test(nigeria$`pct_non-functional`, 
+           listw=rswm, 
+           zero.policy = TRUE, 
+           na.action=na.omit)
+```
+
+```{r}
+set.seed(1234)
+bperm= moran.mc(nigeria$`pct_non-functional`, 
+                listw=rswm, 
+                nsim=999, 
+                zero.policy = TRUE, 
+                na.action=na.omit)
+bperm
+```
+
+### Global Spatial Autocorrelation : Geary's C
+
+Geary's C computation is different from Moran's I in such a way that Geary's C value that is bigger than expected value (1 under randomization) indicates dissimilarity whereas the value below 1 indicates similarity with its neighbors.
+
+```{r}
+geary.test(nigeria$`pct_non-functional`, listw=rswm,zero.policy=TRUE)
+```
+
+As seen from the geary's C test, the statistic also indicate positive autocorrelation on a global scale.
+
+## Cluster and Outlier Analysis
+
+Local Indicators of Spatial Association or LISA are statistics that evaluate the existence of clusters in the spatial arrangement of a given variable. Local Moran's I is one of the most popular method to use to explore existence of clusters on a local scale. Local's Moran I value of each polygon is interpreted by checking whether it is a positive value or a negative value. Positive local moran's value of a polygon indicates formation of cluster (high-high or low-low for itself and its neighbors). Negative value ,on the other hand, indicates outliers meaning that the attribute values of the polygon and its neighbors exist on either side of mean value.
+
+Local moran's I can be computed by using the code chunk below.
+
+```{r}
+fips <- order(nigeria$shapeName)
+localMI <- localmoran(nigeria$`pct_non-functional`, rswm,zero.policy=TRUE)
+head(localMI)
+```
+
+Shape name will be displayed alongside local Moran's statistics by using the code below.
+
+```{r}
+printCoefmat(data.frame(
+  localMI[fips,], 
+  row.names=nigeria$shapeName[fips]),
+  check.names=FALSE,
+  )
+```
+
+### Mapping Local Moran's I
+
+Nigeria and localMI data will be appended using cbind() method.
+
+```{r}
+nigeria.localMI <- cbind(nigeria,localMI) %>%
+  rename(Pr.Ii = Pr.z....E.Ii..)
+```
+
+The choropleths show there is evidence for both positive and negative Ii values. P value choropleth displays which area or polygon is statistically significant by comparing to significance level of 0.05.
+
+```{r}
+localMI.map <- tm_shape(nigeria.localMI) +
+  tm_fill(col = "Ii", 
+          style = "pretty",
+          palette = "RdBu",
+          title = "local moran statistics") +
+  tm_borders(alpha = 0.5)+
+   tm_layout(legend.height=0.25,
+            legend.width=0.35)
+
+pvalue.map <- tm_shape(nigeria.localMI) +
+  tm_fill(col = "Pr.Ii", 
+          breaks=c(-Inf, 0.001, 0.01, 0.05, 0.1, Inf),
+          palette="-Blues", 
+          title = "local Moran's I p-values") +
+  tm_borders(alpha = 0.5)+
+   tm_layout(legend.height=0.25,
+            legend.width=0.35)
+
+tmap_arrange(localMI.map, pvalue.map, asp=1, ncol=2)
+```
+
+### Moran's Scatterplot
+
+The Moran scatterplot is an illustration of the relationship between the values of the chosen attribute at each location and the average value of the same attribute at neighboring locations.
+
+Moran's scatterplot is plotted by standarized value of chosen attribute on x axis and standardized spatially lagged value (weighted average of neighbors) on y axis.
+
+scale() function can be used to extract z-standardized values of pct_non-functional field as below.
+
+```{r}
+nigeria$znf <- scale(nigeria$`pct_non-functional`) %>%
+  as.vector
+```
+
+Afterwards, moran.plot() of spdep is used to display moran scatterplot.
+
+```{r}
+moran.plot(nigeria$znf,rswm,
+           xlab="z-pct non-functional", 
+           ylab="Spatially Lagged z-pct non-functional")
+```
+
+### Lisa Map Classes
+
+There are four quadrants divided by x\~0 and y\~0 lines in the Moran's scatter plot.
+
+We will define the classes of quadrant by creating the codes below.
+
+Initialize the quadrant vector
+
+```{r}
+quadrant <- vector(mode="numeric",length=nrow(localMI))
+```
+
+Spatially lagged variable is created by passing weight matrix and variable arguments to lag.listw() function.
+
+```{r}
+nigeria$lagged <- lag.listw(rswm, nigeria$`pct_non-functional`)
+```
+
+Scale() method can be utilized once again for z-standardization of spatially lagged variable.
+
+```{r}
+nigeria$z.lagged <- scale(nigeria$lagged) %>%
+  as.vector
+```
+
+In the code chunk below, the following actions are executed.
+
+-   Define significance level as 0.05.
+
+-   Quadrant 1 (low-low) is assigned for rows where standardized pct_non-functional \< 0 and spatially lagged standardized pct_non-functional \< 0.
+
+-   Quadrant 2 (low-high) is assigned for rows where standardized pct_non-functional \< 0 and spatially lagged standardized pct_non-functional \> 0.
+
+-   Quadrant 3 (high-low) is assigned for rows where standardized pct_non-functional \> 0 and spatially lagged standardized pct_non-functional \< 0.
+
+-   Quadrant 4 (high-high) is assigned for rows where standardized pct_non-functional \> 0 and spatially lagged standardized pct_non-functional \> 0.
+
+-   Quadrant 5 (insignificant) is assigned for rows where p-value is less than significant level of 0.05.
+
+```{r}
+signif <- 0.05
+quadrant[nigeria$znf <0 & nigeria$z.lagged<0] <- 1
+quadrant[nigeria$znf <0 & nigeria$z.lagged>0] <- 2
+quadrant[nigeria$znf >0 & nigeria$z.lagged<0] <- 3  
+quadrant[nigeria$znf >0 & nigeria$z.lagged>0] <- 4
+quadrant[localMI[,5]>signif] <- 0
+```
+
+For Lisa map visualizations, it is helpful to see attribute value map and quadrant map side by side for easy comparison and analysis. The code chunk below can be written to display these choropleth maps.
+
+```{r}
+nonfunctional <- qtm(nigeria, "pct_non-functional")+
+                 tm_layout(main.title="Non-Functional Water Points (%)",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+
+nigeria.localMI$quadrant <- quadrant
+colors <- c("#ffffff", "#2c7bb6", "#abd9e9", "#fdae61", "#d7191c")
+clusters <- c("insignificant", "low-low", "low-high", "high-low", "high-high")
+
+LisaMap <- tm_shape(nigeria.localMI) +
+  tm_fill(col = "quadrant", 
+          style = "cat", 
+          palette = colors[c(sort(unique(quadrant)))+1], 
+          labels = clusters[c(sort(unique(quadrant)))+1],
+          popup.vars = c("")) +
+  tm_view(set.zoom.limits = c(11,17)) +
+  tm_borders(alpha=0.5)+
+  tm_layout(main.title="Quadrant Map",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+
+tmap_arrange(nonfunctional, LisaMap, 
+             asp=1, ncol=2)
+```
+
+Discussion points:
+
+-   From non-functional water point (%) plot, it can be noted that light yellow colored polygons at the top right corner display low percentage of non-functional water points (0-0.2) while some polygons at the bottom map in maroon color show high percentage of non-functional water points (0.8-1).
+
+-   There is evidence of clusters being present in quadrant map. Low-low quadrant/clusters (in blue) are seen to be concentrated at top right of the map whereas high-high clusters (in red) are more spread out but mostly near the bottom.
+
+-   There are also outliers on the map as displayed by sky-blue and orange colored polygons. Outliers are detected for cases where the attribute of polygon is high but the weighted average of neighbors is low or vice versa.
+
+-   Lastly, those that are not statistically significant (p\<0.5) are displayed without any fill color.
+
+## Hot Spot and Cold Spot Area Analysis
+
+Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas. An alternative spatial statistics to detect spatial anomalies is the Getis and Ord\'s G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values cluster spatially.
+
+First of all, weight matrix object wm_B is prepared by passing style argument as B.
+
+```{r}
+wm_B <- nb2listw(knn8, 
+                style="B",zero.policy=TRUE)
+```
+
+### **Local Getis-Ord Statistics**
+
+GI statistics can be calculated in the code chunk below using localG() function of spdep and passing attribute of interest and weight matrix object.
+
+```{r}
+fips <- order(nigeria_1$shapeName)
+gi.fixed <- localG(nigeria_1$`pct_non-functional`, wm_B)
+gi.fixed
+```
+
+The resulted GI statistics will be apended to nigeria dataset to facilitate data visualizations.
+
+```{r}
+nigeria.gi <- cbind(nigeria, as.matrix(gi.fixed)) %>%
+  rename(gstat_fixed = as.matrix.gi.fixed.)
+```
+
+The code chunk below is used to display two choropleth maps of non-functional water points (%) map and local GI statistics map.
+
+```{r}
+nf <- qtm(nigeria_1, "pct_non-functional")+
+      tm_layout(main.title="Non-Functional Water Points (%)",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+
+Gimap <-tm_shape(nigeria.gi) +
+  tm_fill(col = "gstat_fixed", 
+          style = "pretty",
+          palette="-RdBu",
+          title = "local Gi") +
+  tm_borders(alpha = 0.5)+
+  tm_layout(main.title="Local GI Map",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+
+tmap_arrange(nf, Gimap, asp=1, ncol=2)
+```
+
+Discussion points:
+
+-   Top right corner of the map that corresponds to non-functional water point % from 0 to 0.2 has negative GI statistics. That denotes formation of cold spots (low value clusters) that occur when weight average of neighbors falls below the grand average.
+
+-   As expected, high non-functional water points % areas also correspond to positive GI statistics that show presence of hot spots (high value clusters). Hot spots occur when the average of a polygon's neighbors is higher than the grand average.
+
+-   Unlike local Moran's I, GI statistics cannot be used to detect formation of outliers. Therefore, negative values of GI statistics should be interpreted as low value cluster but not spatial outliers.
+
+### Local G Cluster Map By Significance Level
+
+localG() function of spdep does not return the p-value of each polygon that is required to filter the areas that are not statistically significant. Therefore, we will explore local_g() function of rgeoda to create a more complete cluster map.
+
+local_g() function does not take sf object as an argument. Hence, we will convert the data to tibble data frame in the code chunk below.
+
+```{r}
+df <- data.frame(nigeria)
+```
+
+The following code chunk shows the application of local_g() to extract local G statistics and corresponding pseudo p-values. To change the permutation number and significance level, the parameters can be changed in the input fields.
+
+```{r}
+G <- local_g(
+  knn_weights(nigeria, 8),
+  df["pct_non.functional"],
+  permutations = 999,
+  permutation_method = "complete",
+  significance_cutoff = 0.05,
+  seed = 1234
+)
+G
+```
+
+Next, we will extract colors, labels and clusters from G and afterwards use plot() method to plot local G cluster map.
+
+```{r}
+lisa_colors <- lisa_colors(G)
+lisa_labels <- lisa_labels(G)
+lisa_clusters <- lisa_clusters(G)
+```
+
+```{r}
+cluster <- plot(st_geometry(nigeria), 
+     col=sapply(lisa_clusters, function(x){return(lisa_colors[[x+1]])}), 
+     border = "#333333", lwd=0.2)
+title(main = "Local G Cluster Map")
+legend('bottomright', legend = lisa_labels, fill = lisa_colors, border = "#eeeeee",text.font=1, cex=0.6)
+
+```
+
+Discussion points:
+
+-   There are only two clusters available in the map as expected from GI statistics.
+
+-   High-high or hot spots are shown in red where non-functional water points (%) is high.
+
+-   Low-low or cold spots are shown in blue where non-functional water points(%) is low.
+
+-   The areas that are not statistically significant do not have any fill color.
+
+### Local G\* Cluster Map By Significance Level
+
+GI\* statistics is the ratio of the weighted average of the neighboring locations to the sum of all values, including the value at the location while G statistics does not include the value at the location itself.
+
+The same process used in local GI can be repeated for this computation. This time, local_gstar() function is used instead to calculate GI\* and its pseudo p values.
+
+```{r}
+Gstar <- local_gstar(
+  knn_weights(nigeria, 8),
+  df["pct_non.functional"],
+  permutations = 999,
+  permutation_method = "complete",
+  significance_cutoff = 0.05,
+  seed = 1234
+)
+```
+
+```{r}
+lisa_colors_star <- lisa_colors(Gstar)
+lisa_labels_star <- lisa_labels(Gstar)
+lisa_clusters_star <- lisa_clusters(Gstar)
+```
+
+```{r}
+cluster <- plot(st_geometry(nigeria), 
+     col=sapply(lisa_clusters_star, function(x){return(lisa_colors_star[[x+1]])}), 
+     border = "#333333", lwd=0.2)
+title(main = "Local G* Cluster Map")
+legend('bottomright', legend = lisa_labels_star, fill = lisa_colors_star, border = "#eeeeee",text.font=1, cex=0.6)
+```
