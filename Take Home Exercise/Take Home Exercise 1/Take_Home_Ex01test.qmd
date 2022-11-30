@@ -1,5 +1,10 @@
 ---
-title: "Take Home Exercise 1: Geospatial Analytics For Social Good"
+title: "Birds of a feather flock together: Do functionally similar water points positively co-occur in Nigeria?"
+author: Soe Htet
+execute: 
+  warning: False
+  message: False
+format: html
 editor: visual
 ---
 
