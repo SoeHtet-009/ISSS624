@@ -3,13 +3,13 @@ title: "Take Home Exercise 1"
 editor: visual
 ---
 
-## Overview
+## 1 Overview
 
 Water is an important resource to mankind. Clean and accessible water is critical to human health. It provides a healthy environment, a sustainable economy, reduces poverty and ensures peace and security. Yet over 40% of the global population does not have access to sufficient clean water. By 2025, 1.8 billion people will be living in countries or regions with absolute water scarcity, according to UN-Water. The lack of water poses a major threat to several sectors, including food security. Agriculture uses about 70% of the world's accessible freshwater.
 
 Geospatial analytics hold tremendous potential to address complex problems facing society. In this study, we will apply appropriate global and local measures of spatial Association techniques to reveals the spatial patterns of non-functional water points. Nigeria will be the country of study for this assignment.
 
-## Getting Started
+## 2 Getting Started
 
 Firstly, we will install libraries below for data wrangling and geospatial analysis purposes.
 
@@ -17,7 +17,7 @@ Firstly, we will install libraries below for data wrangling and geospatial analy
 pacman::p_load(spdep,tidyverse,tmap,sf,funModeling,rgeoda)
 ```
 
-## Importing Geospatial Data
+## 3 Importing Geospatial Data
 
 To import a shapefile object, st_read() function of sf package can be used as shown in the code chunk below.
 
@@ -57,7 +57,7 @@ duplicates <-nigeria_1[duplicated(nigeria_1$shapeName), ]
 duplicates
 ```
 
-## Importing Attribute Data
+## 4 Importing Attribute Data
 
 To import csv fiile, read.csv() function can be utilized. The data has been cleaned beforehand to filter the country to include Nigeria only. Otherwise, filter() function of dplyr can be used to exclude all the other countries.
 
@@ -79,7 +79,7 @@ The column we are interested in "status_clean" is found to contain blank values.
 nigeria_2$status_clean[nigeria_2$status_clean==""] = "Unknown"
 ```
 
-## EDA
+## 5 EDA
 
 In the code chunk below, `freq()` of **funModeling** package is used to display the distribution of *status_clean* field in *attribute data set nigeria_2*.
 
@@ -88,11 +88,11 @@ freq(data=nigeria_2,
      input = 'status_clean')
 ```
 
-## Extracting Water Point Data
+## 6 Extracting Water Point Data
 
 In this section, we will learn how to classify functional and non-functional water points in attribute data.
 
-### Extracting Functional Water Points
+### 6.1 Extracting Functional Water Points
 
 Dplyr's function filter() is used to classify functional water points and proportion is plotted after filtering.
 
@@ -105,7 +105,7 @@ freq(data=functional,
      input = 'status_clean')
 ```
 
-### Extracting Non-functional Water Points
+### 6.2 Extracting Non-functional Water Points
 
 Likewise, non-functional water points are extracted by using the following texts in status_clean field.
 
@@ -120,7 +120,7 @@ freq(data=Non_functional,
      input = 'status_clean')
 ```
 
-### Extracting Unknown Status Water Point
+### 6.3 Extracting Unknown Status Water Point
 
 Lastly, the following code chunk is used to extract unknown status.
 
@@ -129,7 +129,7 @@ Unknown <- nigeria_2 %>%
   filter(status_clean == "Unknown")
 ```
 
-## Performing Point In Polygon Count
+## 7 Performing Point In Polygon Count
 
 The following code chunk is used to calculate how many total, functional, non-functional and unknown water points are present in each polygon.
 
@@ -145,7 +145,7 @@ nigeria_1 <- nigeria_1 %>%
     st_intersects(nigeria_1, Unknown)))
 ```
 
-## Saving Analytical Data
+## 8 Saving Analytical Data
 
 Afterwards, percentage of functional and non-functional water points in each polygon are computed by dividing with total water points.
 
@@ -163,7 +163,7 @@ Things to learn from the code chunk above:
 write_rds(nigeria_1, "nigeria_1.rds")
 ```
 
-## Visualizing Spatial Distribution of Water Points
+## 9 Visualizing Spatial Distribution of Water Points
 
 ```{r}
 nigeria_1 <- read_rds("nigeria_1.rds")
@@ -184,7 +184,7 @@ unknown <- qtm(nigeria_1, "wpt_unknown")+
 tmap_arrange(total, wp_functional, wp_nonfunctional, unknown,asp=0, ncol=2)
 ```
 
-## Visualizing Spatial Distribution of Water Points %
+## 10 Visualizing Spatial Distribution of Water Points %
 
 ```{r}
 pct_functional <- qtm(nigeria_1, "pct_functional")+
@@ -215,7 +215,7 @@ NaN values in pct_non-functional field will be recoded as 0 in the code chunk be
 nigeria_1["pct_non-functional"][is.na(nigeria_1["pct_non-functional"])] <- 0
 ```
 
-## Computation of Spatial Weight Matrix
+## 11 Computation of Spatial Weight Matrix
 
 Weight matrix can be computed in various methods. Firstly, queen contiguity based weight is computed below.
 
@@ -287,9 +287,9 @@ rswm <- nb2listw(knn8,
                 style="W",zero.policy=TRUE)
 ```
 
-## Global Spatial Autocorrelation
+## 12 Global Spatial Autocorrelation
 
-### Global Spatial Autocorrelation : Moran's I
+### 12.1 Global Spatial Autocorrelation : Moran's I
 
 Global Moran's I is a statistical test that indicates spatial and attribute similarity. Under randomization, Moran's I value is approximately zero. Therefore, positive Moran's I value is interpreted as attribute similarity pattern (positive spatial autocorrelation) across the map while negative Moran's I value shows checker board pattern (alternate low and high) across the map.
 
@@ -310,7 +310,7 @@ bperm= moran.mc(nigeria$`pct_non-functional`,
 bperm
 ```
 
-### Global Spatial Autocorrelation : Geary's C
+### 12.2 Global Spatial Autocorrelation : Geary's C
 
 Geary's C computation is different from Moran's I in such a way that Geary's C value that is bigger than expected value (1 under randomization) indicates dissimilarity whereas the value below 1 indicates similarity with its neighbors.
 
@@ -320,7 +320,7 @@ geary.test(nigeria$`pct_non-functional`, listw=rswm,zero.policy=TRUE)
 
 As seen from the geary's C test, the statistic also indicate positive autocorrelation on a global scale.
 
-## Cluster and Outlier Analysis
+## 13 Cluster and Outlier Analysis
 
 Local Indicators of Spatial Association or LISA are statistics that evaluate the existence of clusters in the spatial arrangement of a given variable. Local Moran's I is one of the most popular method to use to explore existence of clusters on a local scale. Local's Moran I value of each polygon is interpreted by checking whether it is a positive value or a negative value. Positive local moran's value of a polygon indicates formation of cluster (high-high or low-low for itself and its neighbors). Negative value ,on the other hand, indicates outliers meaning that the attribute values of the polygon and its neighbors exist on either side of mean value.
 
@@ -342,7 +342,7 @@ printCoefmat(data.frame(
   )
 ```
 
-### Mapping Local Moran's I
+### 13.1 Mapping Local Moran's I
 
 Nigeria and localMI data will be appended using cbind() method.
 
@@ -375,7 +375,7 @@ pvalue.map <- tm_shape(nigeria.localMI) +
 tmap_arrange(localMI.map, pvalue.map, asp=1, ncol=2)
 ```
 
-### Moran's Scatterplot
+### 13.2 Moran's Scatterplot
 
 The Moran scatterplot is an illustration of the relationship between the values of the chosen attribute at each location and the average value of the same attribute at neighboring locations.
 
@@ -396,7 +396,7 @@ moran.plot(nigeria$znf,rswm,
            ylab="Spatially Lagged z-pct non-functional")
 ```
 
-### Lisa Map Classes
+### 14 Lisa Map Classes
 
 There are four quadrants divided by x\~0 and y\~0 lines in the Moran's scatter plot.
 
@@ -486,7 +486,7 @@ Discussion points:
 
 -   Lastly, those that are not statistically significant (p\<0.5) are displayed without any fill color.
 
-## Hot Spot and Cold Spot Area Analysis
+## 15 Hot Spot and Cold Spot Area Analysis
 
 Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas. An alternative spatial statistics to detect spatial anomalies is the Getis and Ord\'s G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values cluster spatially.
 
@@ -497,7 +497,7 @@ wm_B <- nb2listw(knn8,
                 style="B",zero.policy=TRUE)
 ```
 
-### **Local Getis-Ord Statistics**
+### **15.1 Local Getis-Ord Statistics**
 
 GI statistics can be calculated in the code chunk below using localG() function of spdep and passing attribute of interest and weight matrix object.
 
@@ -547,7 +547,7 @@ Discussion points:
 
 -   Unlike local Moran's I, GI statistics cannot be used to detect formation of outliers. Therefore, negative values of GI statistics should be interpreted as low value cluster but not spatial outliers.
 
-### Local G Cluster Map By Significance Level
+### 15.2 Local G Cluster Map By Significance Level
 
 localG() function of spdep does not return the p-value of each polygon that is required to filter the areas that are not statistically significant. Therefore, we will explore local_g() function of rgeoda to create a more complete cluster map.
 
@@ -598,7 +598,7 @@ Discussion points:
 
 -   The areas that are not statistically significant do not have any fill color.
 
-### Local G\* Cluster Map By Significance Level
+### 15.3 Local G\* Cluster Map By Significance Level
 
 GI\* statistics is the ratio of the weighted average of the neighboring locations to the sum of all values, including the value at the location while G statistics does not include the value at the location itself.
 
