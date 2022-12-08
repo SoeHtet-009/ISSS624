@@ -25,6 +25,8 @@ website:
         menu: 
         - text: Take Home Exercise 1
           href: Take Home Exercise/Take Home Exercise 1/Take_Home_Ex01test.qmd
+        - text: Take Home Exercise 2
+          href: Take Home Exercise/Take Home Exercise 2/Take_Home_Ex02.qmd
     right:
       - href: index.qmd
         text: Home
@@ -35,6 +37,8 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
+    code-fold: true
+    code-summary: "Show the code"
 
 editor: visual
 

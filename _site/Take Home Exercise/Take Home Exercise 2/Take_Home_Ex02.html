@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Soe Htet">
+
+<title>ISSS624 - Regionalisation of Multivariate Water Point Attributes with Non-Spatially Constrained and Spatially Constrained Clustering Methods</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS624</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on Exercise 01/Hands-on_01.html">
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on Exercise 02/Hands-on_Ex02.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on Exercise 03/Hands-on_Ex03.html">
+ <span class="dropdown-text">Hands-on Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-class Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Exercise/In-class_Ex01/In-class_ex01.html">
+ <span class="dropdown-text">In-class Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Exercise/In-class_Ex02/In-class_ex02.html">
+ <span class="dropdown-text">In-class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Exercise/In-class_Ex03/In-class_ex03.html">
+ <span class="dropdown-text">In-class Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take Home Exercises</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercises">    
+        <li>
+    <a class="dropdown-item" href="../../Take Home Exercise/Take Home Exercise 1/Take_Home_Ex01test.html">
+ <span class="dropdown-text">Take Home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take Home Exercise/Take Home Exercise 2/Take_Home_Ex02.html">
+ <span class="dropdown-text">Take Home Exercise 2</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">2 Getting Started</a></li>
+  <li><a href="#importing-geospatial-data" id="toc-importing-geospatial-data" class="nav-link" data-scroll-target="#importing-geospatial-data">3 Importing Geospatial Data</a></li>
+  <li><a href="#importing-attribute-data" id="toc-importing-attribute-data" class="nav-link" data-scroll-target="#importing-attribute-data">4 Importing Attribute Data</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">5 Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#filtering-variables-of-interest" id="toc-filtering-variables-of-interest" class="nav-link" data-scroll-target="#filtering-variables-of-interest">5.1 Filtering Variables of Interest</a></li>
+  </ul></li>
+  <li><a href="#performing-point-in-polygon-count" id="toc-performing-point-in-polygon-count" class="nav-link" data-scroll-target="#performing-point-in-polygon-count">6 Performing Point In Polygon Count</a></li>
+  <li><a href="#saving-analytical-data" id="toc-saving-analytical-data" class="nav-link" data-scroll-target="#saving-analytical-data">7 Saving Analytical Data</a></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">8 Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#correlations-between-cluster-variables" id="toc-correlations-between-cluster-variables" class="nav-link" data-scroll-target="#correlations-between-cluster-variables">8.1 Correlations Between Cluster Variables</a></li>
+  <li><a href="#standardization-of-cluster-variables" id="toc-standardization-of-cluster-variables" class="nav-link" data-scroll-target="#standardization-of-cluster-variables">8.2 Standardization of Cluster Variables</a></li>
+  </ul></li>
+  <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">9 Hierarchical Clustering</a>
+  <ul class="collapse">
+  <li><a href="#computing-proximity-matrix" id="toc-computing-proximity-matrix" class="nav-link" data-scroll-target="#computing-proximity-matrix">9.1 Computing Proximity Matrix</a></li>
+  <li><a href="#selecting-optimal-clustering-algorithm" id="toc-selecting-optimal-clustering-algorithm" class="nav-link" data-scroll-target="#selecting-optimal-clustering-algorithm">9.2 Selecting Optimal Clustering Algorithm</a></li>
+  <li><a href="#determining-optimal-cluster-numbers" id="toc-determining-optimal-cluster-numbers" class="nav-link" data-scroll-target="#determining-optimal-cluster-numbers">9.3 Determining Optimal Cluster Numbers</a></li>
+  <li><a href="#mapping-the-clusters-formed" id="toc-mapping-the-clusters-formed" class="nav-link" data-scroll-target="#mapping-the-clusters-formed">9.4 Mapping The Clusters Formed</a></li>
+  </ul></li>
+  <li><a href="#spatially-constrained-clustering---skater-method" id="toc-spatially-constrained-clustering---skater-method" class="nav-link" data-scroll-target="#spatially-constrained-clustering---skater-method">10 Spatially Constrained Clustering - SKATER Method</a>
+  <ul class="collapse">
+  <li><a href="#queen-contiguity" id="toc-queen-contiguity" class="nav-link" data-scroll-target="#queen-contiguity">10.1 Queen Contiguity</a></li>
+  <li><a href="#computation-of-spatial-weight-matrix" id="toc-computation-of-spatial-weight-matrix" class="nav-link" data-scroll-target="#computation-of-spatial-weight-matrix">10.2 Computation of Spatial Weight Matrix</a></li>
+  <li><a href="#computing-minimum-spanning-tree" id="toc-computing-minimum-spanning-tree" class="nav-link" data-scroll-target="#computing-minimum-spanning-tree">10.3 Computing Minimum Spanning Tree</a></li>
+  <li><a href="#computing-spatially-constrained-clusters" id="toc-computing-spatially-constrained-clusters" class="nav-link" data-scroll-target="#computing-spatially-constrained-clusters">10.4 Computing Spatially Constrained Clusters</a></li>
+  <li><a href="#visualizing-of-clusters-in-choropleth-map" id="toc-visualizing-of-clusters-in-choropleth-map" class="nav-link" data-scroll-target="#visualizing-of-clusters-in-choropleth-map">10.5 Visualizing of Clusters In Choropleth Map</a></li>
+  <li><a href="#interpretation-of-spatially-restrained-clusters" id="toc-interpretation-of-spatially-restrained-clusters" class="nav-link" data-scroll-target="#interpretation-of-spatially-restrained-clusters">10.6 Interpretation of Spatially Restrained Clusters</a></li>
+  </ul></li>
+  <li><a href="#spatially-constrained-clustering-clustgeo-method" id="toc-spatially-constrained-clustering-clustgeo-method" class="nav-link" data-scroll-target="#spatially-constrained-clustering-clustgeo-method">11 Spatially Constrained Clustering : ClustGeo Method</a>
+  <ul class="collapse">
+  <li><a href="#visualisation-of-clusters-in-choropleth-map" id="toc-visualisation-of-clusters-in-choropleth-map" class="nav-link" data-scroll-target="#visualisation-of-clusters-in-choropleth-map">11.1 Visualisation of Clusters In Choropleth Map</a></li>
+  <li><a href="#interpretation-of-spatially-restrained-clusters-1" id="toc-interpretation-of-spatially-restrained-clusters-1" class="nav-link" data-scroll-target="#interpretation-of-spatially-restrained-clusters-1">11.2 Interpretation of Spatially Restrained Clusters</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Regionalisation of Multivariate Water Point Attributes with Non-Spatially Constrained and Spatially Constrained Clustering Methods</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Soe Htet </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">1 Overview</h2>
+<p>The process of creating regions is called <a href="https://www.researchgate.net/publication/28153673_Supervised_Regionalization_Methods_A_Survey/link/0fcfd5094046b13d35000000/download">regionalisation</a>. A regionalisation is a special kind of clustering where the objective is to group observations which are similar in their statistical attributes, but also in their spatial location. In this sense, regionalization embeds the same logic as standard clustering techniques, but also applies a series of geographical constraints. Often, these constraints relate to connectivity: two candidates can only be grouped together in the same region if there exists a path from one member to another member that never leaves the region. These paths often model the spatial relationships in the data, such as contiguity or proximity. However, connectivity does not always need to hold for all regions, and in certain contexts it makes sense to relax connectivity or to impose different types of geographic constraints.</p>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">2 Getting Started</h2>
+<p>Firstly, we will install libraries below for data wrangling and geospatial analysis purposes.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(rgdal, spdep, tmap, sf, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggpubr, cluster, factoextra, NbClust,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               heatmaply, corrplot, tidyverse,psych,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               Hmisc,knitr,kableExtra,ClustGeo,ggiraphExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="importing-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-geospatial-data">3 Importing Geospatial Data</h2>
+<p>To import a shapefile object, st_read() function of sf package can be used as shown in the code chunk below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"geospatial"</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">layer =</span> <span class="st">"geoBoundaries-NGA-ADM2"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">crs =</span> <span class="dv">4326</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-NGA-ADM2' from data source 
+  `C:\Soe Htet\ISSS624\Take Home Exercise\Take Home Exercise 2\Geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 774 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nigeria_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 774 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84
+First 10 features:
+        shapeName Level                    shapeID shapeGroup shapeType
+1       Aba North  ADM2 NGA-ADM2-72505758B79815894        NGA      ADM2
+2       Aba South  ADM2 NGA-ADM2-72505758B67905963        NGA      ADM2
+3          Abadam  ADM2 NGA-ADM2-72505758B57073987        NGA      ADM2
+4           Abaji  ADM2 NGA-ADM2-72505758B61968000        NGA      ADM2
+5            Abak  ADM2 NGA-ADM2-72505758B39432389        NGA      ADM2
+6       Abakaliki  ADM2 NGA-ADM2-72505758B36739173        NGA      ADM2
+7  Abeokuta North  ADM2 NGA-ADM2-72505758B86358915        NGA      ADM2
+8  Abeokuta South  ADM2 NGA-ADM2-72505758B56925175        NGA      ADM2
+9             Abi  ADM2  NGA-ADM2-72505758B1616690        NGA      ADM2
+10    Aboh-Mbaise  ADM2 NGA-ADM2-72505758B78555816        NGA      ADM2
+                         geometry
+1  MULTIPOLYGON (((7.401109 5....
+2  MULTIPOLYGON (((7.334479 5....
+3  MULTIPOLYGON (((13.83477 13...
+4  MULTIPOLYGON (((7.045872 9....
+5  MULTIPOLYGON (((7.811244 5....
+6  MULTIPOLYGON (((8.4109 6.28...
+7  MULTIPOLYGON (((3.143903 7....
+8  MULTIPOLYGON (((3.301615 7....
+9  MULTIPOLYGON (((8.153282 5....
+10 MULTIPOLYGON (((7.321909 5....</code></pre>
+</div>
+</div>
+<p>The imported file has WGS 84 coordinate system,774 rows and five columns including multipolygon geometry coordinates.</p>
+<p>Shapename column of sf object will be analyzed to check if there are any duplicates.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>duplicates <span class="ot">&lt;-</span>nigeria_1[<span class="fu">duplicated</span>(nigeria_1<span class="sc">$</span>shapeName), ]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>duplicates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 6 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 4.249275 ymin: 7.806164 xmax: 9.020704 ymax: 10.39507
+Geodetic CRS:  WGS 84
+    shapeName Level                    shapeID shapeGroup shapeType
+95      Bassa  ADM2 NGA-ADM2-72505758B52690633        NGA      ADM2
+305  Ifelodun  ADM2 NGA-ADM2-72505758B18326272        NGA      ADM2
+356  Irepodun  ADM2 NGA-ADM2-72505758B79178637        NGA      ADM2
+520  Nasarawa  ADM2 NGA-ADM2-72505758B67188591        NGA      ADM2
+547       Obi  ADM2  NGA-ADM2-72505758B3073896        NGA      ADM2
+694  Surulere  ADM2 NGA-ADM2-72505758B31597260        NGA      ADM2
+                          geometry
+95  MULTIPOLYGON (((8.823522 10...
+305 MULTIPOLYGON (((4.721977 7....
+356 MULTIPOLYGON (((4.543349 7....
+520 MULTIPOLYGON (((7.493228 8....
+547 MULTIPOLYGON (((9.008576 8....
+694 MULTIPOLYGON (((4.375293 8....</code></pre>
+</div>
+</div>
+<p>The above summary reveals that 6 secondary administrative areas appear more than once in the data. However, upon further checking, geometries of duplicate shape names are found to be different. Thus, they will not be deleted to prevent loss of information.</p>
+<p>Nevertheless, as duplicated names can pose problems in subsequent analysis, we will rename the names as below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">95</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Bassa1"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">305</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Ifelodun1"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">356</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Irepodun1"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">520</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Nasarawa1"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">547</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Obi1"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>nigeria_1[<span class="dv">694</span>,<span class="st">"shapeName"</span>] <span class="ot">&lt;-</span> <span class="st">"Surulere1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now, the code below is added to ensure there is no more duplicate.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>duplicates <span class="ot">&lt;-</span>nigeria_1[<span class="fu">duplicated</span>(nigeria_1<span class="sc">$</span>shapeName), ]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>duplicates</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 0 features and 5 fields
+Bounding box:  xmin: NA ymin: NA xmax: NA ymax: NA
+Geodetic CRS:  WGS 84
+[1] shapeName  Level      shapeID    shapeGroup shapeType  geometry  
+&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+</div>
+</div>
+</section>
+<section id="importing-attribute-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-attribute-data">4 Importing Attribute Data</h2>
+<p>To import csv fiile, read.csv() function can be utilized. The data has been cleaned beforehand to filter the country to include Nigeria only. Otherwise, filter() function of dplyr can be used to exclude all the other countries.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nigeria_2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Nigeria_Att.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Tibble dataframe is transformed to sf data table in code chunk below and the following columns are selected for clustering.</p>
+<p>Water tech category - system used to transport the water from the source to collection point.</p>
+<p>Is_urban - description of water point being at urban or rural area</p>
+<p>Usage capacity - Recommended maximum users per water point</p>
+<p>Clean_adm2 - names of secondary administrative areas</p>
+<p>status_clean - Status of the water point (functional or non-functional)</p>
+<p>Subjective quality - Perceived status of water including taste, appearance and odour</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nigeria_2 <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(nigeria_2, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon_deg"</span>, <span class="st">"lat_deg"</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs=</span><span class="dv">4326</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>nigeria_2 <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"X.water_tech_category"</span>,<span class="st">"is_urban"</span>,<span class="st">"usage_capacity"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>         <span class="st">"clean_adm2"</span>,<span class="st">"status_clean"</span>,<span class="st">"X.subjective_quality"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>nigeria_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 95008 features and 6 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 2.707441 ymin: 4.301812 xmax: 14.21828 ymax: 13.86568
+Geodetic CRS:  WGS 84
+First 10 features:
+   X.water_tech_category is_urban usage_capacity    clean_adm2 status_clean
+1               Tapstand     TRUE            250          Moba             
+2        Mechanized Pump    FALSE           1000 Obafemi-Owode   Functional
+3              Hand Pump    FALSE            300       Ohaukwu             
+4                           FALSE            300       Isi-Uzo             
+5              Hand Pump    FALSE            300       Isi-Uzo             
+6              Hand Pump    FALSE            300       Okpokwu             
+7              Hand Pump    FALSE            300       Okpokwu             
+8        Mechanized Pump     TRUE           1000         Gboko             
+9              Hand Pump    FALSE            300        Bukuru             
+10             Hand Pump    FALSE            300        Bukuru             
+   X.subjective_quality                  geometry
+1                               POINT (5.12 7.98)
+2    Acceptable quality POINT (3.597668 6.964532)
+3                         POINT (7.92972 6.48694)
+4                         POINT (7.64867 6.72757)
+5                          POINT (7.66485 6.7799)
+6                         POINT (7.77917 6.95556)
+7                         POINT (7.84167 7.01778)
+8                            POINT (8.985 7.3255)
+9                           POINT (9.11 7.171667)
+10                      POINT (9.216867 7.204867)</code></pre>
+</div>
+</div>
+</section>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">5 Data Wrangling</h2>
+<p>Afterwards, describe() function of Hmisc package will be used to explore the selected variables in detail.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>clean_adm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$clean_adm2 
+       n  missing distinct 
+   95008        0      753 
+
+lowest : Aba North    Aba South    Abaji        Abak         Abakaliki   
+highest: Zangon Kataf Zaria        Zing         Zurmi        Zuru        </code></pre>
+</div>
+</div>
+<p>Missing values of water tech category column in the data are detected after using describe() function.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>X.water_tech_category)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$X.water_tech_category 
+       n  missing distinct 
+   84953    10055        4 
+                                                                          
+Value            Hand Pump Mechanized Pump Rope and Bucket        Tapstand
+Frequency            58755           25644               1             553
+Proportion           0.692           0.302           0.000           0.007</code></pre>
+</div>
+</div>
+<p>In the code chunk below, missing values are replaced as unknown.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>nigeria_2<span class="sc">$</span>X.water_tech_category[nigeria_2<span class="sc">$</span>X.water_tech_category<span class="sc">==</span><span class="st">""</span>]<span class="ot">=</span><span class="st">"Unknown"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>is_urban)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$is_urban 
+       n  missing distinct 
+   95008        0        2 
+                      
+Value      FALSE  TRUE
+Frequency  75444 19564
+Proportion 0.794 0.206</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>usage_capacity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$usage_capacity 
+       n  missing distinct     Info     Mean      Gmd 
+   95008        0        4    0.601    488.6    276.5 
+                                  
+Value         50   250   300  1000
+Frequency      2   573 68789 25644
+Proportion 0.000 0.006 0.724 0.270</code></pre>
+</div>
+</div>
+<p>Status_clean column is also found to have missing values and they are recoded as “Unknown” accordingly.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>status_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$status_clean 
+       n  missing distinct 
+   84352    10656        8 
+
+lowest : Abandoned                        Abandoned/Decommissioned         Functional                       Functional but needs repair      Functional but not in use       
+highest: Functional but needs repair      Functional but not in use        Non-Functional                   Non-Functional due to dry season Non functional due to dry season</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>nigeria_2<span class="sc">$</span>status_clean[nigeria_2<span class="sc">$</span>status_clean<span class="sc">==</span><span class="st">""</span>] <span class="ot">=</span> <span class="st">"Unknown"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Similarly, subjective quality also has missing information and the same recoding process is performed.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(nigeria_2<span class="sc">$</span>X.subjective_quality)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>nigeria_2$X.subjective_quality 
+       n  missing distinct 
+   84383    10625        6 
+
+lowest : Acceptable quality                  No because of Colour                No because of Odour                 No because of Taste                 Within National limits (potable)   
+highest: No because of Colour                No because of Odour                 No because of Taste                 Within National limits (potable)    Within National standards (potable)</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>nigeria_2<span class="sc">$</span>X.subjective_quality[nigeria_2<span class="sc">$</span>X.subjective_quality<span class="sc">==</span><span class="st">""</span>] <span class="ot">=</span> <span class="st">"Unknown"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="filtering-variables-of-interest" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-variables-of-interest">5.1 Filtering Variables of Interest</h3>
+<p>Select rows where transport system is hand pump and assign to “HandPump”.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>HandPump <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(X.water_tech_category <span class="sc">==</span> <span class="st">"Hand Pump"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Select rows where water points are located at rural and urban areas.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Rural <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(is_urban <span class="sc">==</span> <span class="st">"FALSE"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>Urban <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(is_urban <span class="sc">==</span> <span class="st">"TRUE"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Select rows where maximum recommended users is less than 1000 and equal to or more than 1000.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>U_Capacity_1 <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(usage_capacity <span class="sc">&lt;</span> <span class="dv">1000</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>U_Capacity_2 <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(usage_capacity <span class="sc">&gt;=</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Select rows where water points are inspected to be functional or non-functional.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>functional <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(status_clean <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Functional"</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Functional but needs repair"</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Functional but not in use"</span>))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>Non_functional <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(status_clean <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Non-Functional"</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Non-Functional due to dry season"</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Non functional but not in use"</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Abandoned/Decommissioned"</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"Abandoned"</span>))</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>Unknown <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(status_clean <span class="sc">==</span> <span class="st">"Unknown"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Select rows where quality of water is drinkable or not suitable to drink.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Potable <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(X.subjective_quality <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Acceptable quality"</span>,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Within National limits (Potable)"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Within National standards (Potable)"</span>))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>Not_Potable <span class="ot">&lt;-</span> nigeria_2 <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(X.subjective_quality <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"No because of Colour"</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"No because of Odour"</span>,</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"No because of Taste"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="performing-point-in-polygon-count" class="level2">
+<h2 class="anchored" data-anchor-id="performing-point-in-polygon-count">6 Performing Point In Polygon Count</h2>
+<p>The following code chunk is used to calculate how many counts of variables calculated are present in each polygon. st_intersect() method is used to perform the calculation.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">total_wpt</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, nigeria_2))) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">HandPump</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, HandPump))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Rural</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, Rural))) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Urban</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, Urban))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">wpt_functional</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, functional))) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">wpt_non-functional</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, Non_functional)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">U_Capacity_1</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, U_Capacity_1))) <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">U_Capacity_2</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, U_Capacity_2)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Potable</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, Potable))) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Not_Potable</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">lengths</span>(</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_intersects</span>(nigeria_1, Not_Potable)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>After the counts in polygon are done, we will proceed to compute the percentage figures in the code chunk below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> nigeria_1 <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_HandPump =</span> (HandPump<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_Rural =</span> (Rural<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_functional =</span> (wpt_functional<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_non_functional =</span> (<span class="st">`</span><span class="at">wpt_non-functional</span><span class="st">`</span><span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_UC_1 =</span> (U_Capacity_1<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_UC_2 =</span> (U_Capacity_2<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_Potable =</span> (Potable<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Pct_Not_Potable =</span> (Not_Potable<span class="sc">/</span>total_wpt)<span class="sc">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>As the denominator for calculations is total_wpt (total water point), for some areas that do not have any water point (i.e the denominator is 0), the calculation will give rise to NaN value. To fix this issue, we will assign value 0 to percentage columns.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>nigeria_1[nigeria_1<span class="sc">$</span>total_wpt<span class="sc">==</span><span class="dv">0</span>,<span class="fu">c</span>(<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="saving-analytical-data" class="level2">
+<h2 class="anchored" data-anchor-id="saving-analytical-data">7 Saving Analytical Data</h2>
+<p>The final clean data is saved as .rds file.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(nigeria_1, <span class="st">"nigeria_1.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">8 Exploratory Data Analysis</h2>
+<p>To understand more about the data fields that we have just derived, the distributions of these fields are plotted by using ggplot2 package.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>nigeria_1 <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"nigeria_1.rds"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>g.hp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_HandPump</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>g.rural <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_Rural</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>g.functional <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>g.nonfunctional <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_non_functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>UC1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_UC_1</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a>UC2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_UC_2</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb42-37"><a href="#cb42-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-38"><a href="#cb42-38" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(g.hp,g.rural,g.functional,g.nonfunctional,</span>
+<span id="cb42-39"><a href="#cb42-39" aria-hidden="true" tabindex="-1"></a>          UC1,UC2,<span class="at">nrow=</span><span class="dv">3</span>,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Observations from distribution plos</strong></p>
+<ul>
+<li><p>As expected, the water points installed as mostly in rural areas where potable drinking water is not easily accessible.</p></li>
+<li><p>Average percentage of functional water points is only close to 50%. That is alarming as it means half of water points installed in Nigeria might not be functioning properly.</p></li>
+<li><p>Majority of water points can only serve less than 1000 people per point.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>total_functional <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">wpt_functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>total_nonfunctional <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">wpt_non-functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>g.potable <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_Potable</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>g.n_potable <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_Not_Potable</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(total_functional,total_nonfunctional,</span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>          g.potable,g.n_potable,<span class="at">nrow=</span><span class="dv">2</span>,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Observations from distribution plots</strong></p>
+<ul>
+<li><p>Distributions of both functional and non-functional water points are right skewed.</p></li>
+<li><p>Majority of the water points inspected are perceived to have potable water.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data=</span>nigeria_1, </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span><span class="st">`</span><span class="at">Pct_non_functional</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill=</span><span class="st">"light blue"</span>)</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(p1,p2,<span class="at">nrow=</span><span class="dv">1</span>,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Observations from boxplots</strong></p>
+<ul>
+<li>As mentioned, only half of total water points are functional. It is evident to see in the boxplot of Pct_functional.</li>
+</ul>
+<section id="correlations-between-cluster-variables" class="level3">
+<h3 class="anchored" data-anchor-id="correlations-between-cluster-variables">8.1 Correlations Between Cluster Variables</h3>
+<p>The data is converted to data frame object as cor() function can only work with data frame object.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>nigeria <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(nigeria_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The code chunk below produces a plot that shows correlations between cluster variables.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>cluster_vars.cor <span class="ot">=</span> <span class="fu">cor</span>(nigeria[,<span class="fu">c</span>(<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">17</span><span class="sc">:</span><span class="dv">24</span>)])</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot.mixed</span>(cluster_vars.cor,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">lower =</span> <span class="st">"ellipse"</span>, </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">upper =</span> <span class="st">"number"</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">tl.pos =</span> <span class="st">"lt"</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">diag =</span> <span class="st">"l"</span>,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">tl.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">number.cex =</span> .<span class="dv">7</span>,<span class="at">tl.cex=</span><span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pct_UC_1 is heavily correlated with Pct_UC_2 and Pct_HandPump. Therefore, it will be dropped from cluster variable list to avoid multicollinearity.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>cluster.vars <span class="ot">&lt;-</span> nigeria <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">12</span>,<span class="dv">17</span><span class="sc">:</span><span class="dv">20</span>,<span class="dv">22</span><span class="sc">:</span><span class="dv">24</span>))</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cluster.vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  shapeName wpt_functional wpt_non.functional Pct_HandPump Pct_Rural
+1 Aba North              7                  9    11.764706  0.000000
+2 Aba South             29                 35     9.859155  5.633803
+3    Abadam              0                  0     0.000000  0.000000
+4     Abaji             23                 34    40.350877 84.210526
+5      Abak             23                 25     8.333333 83.333333
+6 Abakaliki             82                 42    43.776824 87.553648
+  Pct_functional Pct_non_functional Pct_UC_2 Pct_Potable Pct_Not_Potable
+1       41.17647           52.94118 82.35294    76.47059       17.647059
+2       40.84507           49.29577 87.32394    80.28169        9.859155
+3        0.00000            0.00000  0.00000     0.00000        0.000000
+4       40.35088           59.64912 59.64912    98.24561        1.754386
+5       47.91667           52.08333 91.66667    72.91667       27.083333
+6       35.19313           18.02575  9.44206    42.06009       11.158798</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(cluster.vars) <span class="ot">&lt;-</span> cluster.vars<span class="sc">$</span>shapeName</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> cluster.vars <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>))</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>          wpt_functional wpt_non.functional Pct_HandPump Pct_Rural
+Aba North              7                  9    11.764706  0.000000
+Aba South             29                 35     9.859155  5.633803
+Abadam                 0                  0     0.000000  0.000000
+Abaji                 23                 34    40.350877 84.210526
+Abak                  23                 25     8.333333 83.333333
+Abakaliki             82                 42    43.776824 87.553648
+          Pct_functional Pct_non_functional Pct_UC_2 Pct_Potable
+Aba North       41.17647           52.94118 82.35294    76.47059
+Aba South       40.84507           49.29577 87.32394    80.28169
+Abadam           0.00000            0.00000  0.00000     0.00000
+Abaji           40.35088           59.64912 59.64912    98.24561
+Abak            47.91667           52.08333 91.66667    72.91667
+Abakaliki       35.19313           18.02575  9.44206    42.06009
+          Pct_Not_Potable
+Aba North       17.647059
+Aba South        9.859155
+Abadam           0.000000
+Abaji            1.754386
+Abak            27.083333
+Abakaliki       11.158798</code></pre>
+</div>
+</div>
+</section>
+<section id="standardization-of-cluster-variables" class="level3">
+<h3 class="anchored" data-anchor-id="standardization-of-cluster-variables">8.2 Standardization of Cluster Variables</h3>
+<p>Cluster variables that have been selected are of different types. For example, wpt_functional represents total number of functional water points in the polygon region while Pct_HandPump represents percentage value of water points with hand pump specifically in the region. Therefore, it is wise to standardize the cluster variables to ensure equal importance is placed on each variable.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="hierarchical-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-clustering">9 Hierarchical Clustering</h2>
+<section id="computing-proximity-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="computing-proximity-matrix">9.1 Computing Proximity Matrix</h3>
+<p>Proximity matrix is computed using euclidean distance. The method of distance calculation can be modified in input fields of dist() function.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>proxmat <span class="ot">&lt;-</span> <span class="fu">dist</span>(df_scaled, <span class="at">method =</span> <span class="st">'euclidean'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Afterwards, ward algorithm is used to perform hierarchical clustering.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>hclust_ward <span class="ot">&lt;-</span> <span class="fu">hclust</span>(proxmat, <span class="at">method =</span> <span class="st">'ward.D'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hclust_ward, <span class="at">cex =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="selecting-optimal-clustering-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="selecting-optimal-clustering-algorithm">9.2 Selecting Optimal Clustering Algorithm</h3>
+<p>There are various algorithms that can be used in hierarchical clustering. Therefore, it might be sometimes confusing to choose which algorithm to employ. We can tackle this dilemma by using agnes() function. The output gives the level of homogeneity for each algorithm and higher value in the output corresponds to better homogeneity within the cluster.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="st">"average"</span>, <span class="st">"single"</span>, <span class="st">"complete"</span>, <span class="st">"ward"</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(m) <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="st">"average"</span>, <span class="st">"single"</span>, <span class="st">"complete"</span>, <span class="st">"ward"</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>ac <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">agnes</span>(df_scaled, <span class="at">method =</span> x)<span class="sc">$</span>ac</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(m, ac)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  average    single  complete      ward 
+0.8730418 0.7815309 0.9382505 0.9840038 </code></pre>
+</div>
+</div>
+<p>From the results, ward algorithm gives highest score of homogeneity. Therefore, it will be used for subsequent cluster analysis.</p>
+</section>
+<section id="determining-optimal-cluster-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="determining-optimal-cluster-numbers">9.3 Determining Optimal Cluster Numbers</h3>
+<section id="elbow-method" class="level4">
+<h4 class="anchored" data-anchor-id="elbow-method">9.3.1 Elbow Method</h4>
+<p>There are multiple methods to determine optimal cluster numbers. One of the most popular method is elbow method. fviz_nbclust() of factoextra package allows us to produce elbow method plot as shown below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(df_scaled, hcut, <span class="at">method =</span> <span class="st">"wss"</span>, <span class="at">k.max =</span> <span class="dv">10</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"the Elbow Method"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>There is no clear visible bend in the elbow plot. Therefore, it is ambiguous to decide the optimal number of clusters.</p>
+</section>
+<section id="gap-statistics" class="level4">
+<h4 class="anchored" data-anchor-id="gap-statistics">9.3.2 Gap Statistics</h4>
+<p>Gap statistics is a more sophisticated method to determine optimal number of clusters. fviz_nbclust() function of factoextra package can also be used by passing method argument as “gap_start”. The estimation of optimal clusters will be value that maximizes the gap statistics.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(df_scaled, hcut, <span class="at">nstart =</span> <span class="dv">25</span>,  <span class="at">method =</span> <span class="st">"gap_stat"</span>, <span class="at">nboot =</span> <span class="dv">500</span>)<span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Gap statistic method"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Gap Statistics plot indicates that the optimal number of clusters is 10.</p>
+</section>
+<section id="average-silhouette" class="level4">
+<h4 class="anchored" data-anchor-id="average-silhouette">9.3.3 Average Silhouette</h4>
+<p>Another visualization that can help determine optimal clusters is called average silhouette method. It computes the average silhouette of observations for different values of k. The optimal number of clusters k is the one that maximizes the value of average silhouette over a range of possible values of k.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(df_scaled, hcut, <span class="at">method =</span> <span class="st">"silhouette"</span>, <span class="at">k.max =</span> <span class="dv">10</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"The Silhouette Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Discussion</strong></p>
+<ul>
+<li><p>Elbow method does not provide a conclusive result and the plot result is ambiguous.</p></li>
+<li><p>Gap statistics method proposes 10 as optimal number of clusters. However, it should be noted that 10 clusters for small data set might cause some clusters to have only one or two members.</p></li>
+<li><p>Average silhouette method proposes 2 optimal number of clusters. 6 clusters is second most optimal.</p></li>
+<li><p>From the summary, it can be observed that no two different methods provide same conclusive results. For this study, we will choose 6 clusters as it can give proper differentiation between clusters while keeping a decent number of members in each cluster.</p></li>
+</ul>
+</section>
+</section>
+<section id="mapping-the-clusters-formed" class="level3">
+<h3 class="anchored" data-anchor-id="mapping-the-clusters-formed">9.4 Mapping The Clusters Formed</h3>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cutree</span>(hclust_ward, <span class="at">k=</span><span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>nigeria_cluster <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nigeria_1, <span class="fu">as.matrix</span>(groups)) <span class="sc">%&gt;%</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">CLUSTER</span><span class="st">`</span><span class="ot">=</span><span class="st">`</span><span class="at">as.matrix.groups.</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(nigeria_cluster, <span class="st">"CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Discussion</strong></p>
+<ul>
+<li><p>As hierarchical clustering does not consider spatial similarity, it is clear to see the clusters fragmented across the map.</p></li>
+<li><p>For development policy or marketing or political campaigns, it is desirable that contiguous regions belong to the same clusters to enable an efficient and targeted approach. Therefore, the cluster analysis should be carried out by taking into account both attribute similarity and spatial similarity.</p></li>
+</ul>
+</section>
+</section>
+<section id="spatially-constrained-clustering---skater-method" class="level2">
+<h2 class="anchored" data-anchor-id="spatially-constrained-clustering---skater-method">10 Spatially Constrained Clustering - SKATER Method</h2>
+<p>In this section, we will perform spatially constrained clustering using Skater method. Skater method utilizes minimum spanning tree algorithm from neighbors that are sharing borders to each other. The term “minimum spanning” comes from minimizing the cost (i.e dissimilarity between neighbors) when connecting to form a tree.</p>
+<section id="queen-contiguity" class="level3">
+<h3 class="anchored" data-anchor-id="queen-contiguity">10.1 Queen Contiguity</h3>
+<p>Since Skater method is based on minimum spanning tree algorithm that relies on contiguous neighbors, row 86 of geospatial data (the region with no neighbor) will be removed from the data.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>nigeria_11 <span class="ot">&lt;-</span> nigeria_1[<span class="sc">-</span><span class="dv">86</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The sf object will be converted to spatial polygons object to be able to work with skater method.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>nigeria_sp <span class="ot">&lt;-</span> <span class="fu">as_Spatial</span>(nigeria_11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The code chunk below computes contiguity neighbors by queen method using poly2nb() of spdep package.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>nigeria_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(nigeria_sp)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>nigeria_nb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 773 
+Number of nonzero links: 4440 
+Percentage nonzero weights: 0.7430602 
+Average number of links: 5.743855 </code></pre>
+</div>
+</div>
+</section>
+<section id="computation-of-spatial-weight-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="computation-of-spatial-weight-matrix">10.2 Computation of Spatial Weight Matrix</h3>
+<p>As region 86 was removed due to lack of neighbor, the same region from aspatial data should be removed to keep same number of rows.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>df_spatial <span class="ot">&lt;-</span> df_scaled[<span class="sc">-</span><span class="dv">86</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Edge costs (pairwise dissimilarity between the neighbors) can be computed in the code chunk below using nbcosts() function of spdep package.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>lcosts <span class="ot">&lt;-</span> <span class="fu">nbcosts</span>(nigeria_nb, df_spatial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Next, we <strong>convert the neighbour list to a list weights object</strong> by specifying the just computed <strong>lcosts</strong> as the weights.</p>
+<p>We will use <strong>nb2listw() function of spdep package</strong> to achieve this and we specify the <strong>style as B</strong> to make sure the cost values are not row-standardised.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>nigeria.wm <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(nigeria_nb, </span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>                   lcosts, </span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">style=</span><span class="st">"B"</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nigeria.wm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Characteristics of weights list object:
+Neighbour list object:
+Number of regions: 773 
+Number of nonzero links: 4440 
+Percentage nonzero weights: 0.7430602 
+Average number of links: 5.743855 
+Link number distribution:
+
+  1   2   3   4   5   6   7   8   9  10  11  12  14 
+  2  14  57 125 182 140 122  72  41  12   4   1   1 
+2 least connected regions:
+138 560 with 1 link
+1 most connected region:
+508 with 14 links
+
+Weights style: B 
+Weights constants summary:
+    n     nn      S0       S1     S2
+B 773 597529 11463.8 75587.35 844575</code></pre>
+</div>
+</div>
+</section>
+<section id="computing-minimum-spanning-tree" class="level3">
+<h3 class="anchored" data-anchor-id="computing-minimum-spanning-tree">10.3 Computing Minimum Spanning Tree</h3>
+<p>Minimum spanning tree algorithm is performed using mstree() function of spdep package.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>nigeria.mst <span class="ot">&lt;-</span> <span class="fu">mstree</span>(nigeria.wm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(nigeria.mst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "mst"    "matrix"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nigeria.mst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]      [,3]
+[1,]  415  466 0.6301510
+[2,]  466   63 0.9064619
+[3,]   63  764 0.7126842
+[4,]  764  771 0.7647541
+[5,]   63   89 0.9120423
+[6,]  415  236 1.1537329</code></pre>
+</div>
+</div>
+<p>The final minimum spanning tree structure is displayed.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nigeria_sp, <span class="at">border=</span><span class="fu">gray</span>(.<span class="dv">5</span>))</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.mst</span>(nigeria.mst, </span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">coordinates</span>(nigeria_sp), </span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">col=</span><span class="st">"blue"</span>, </span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">cex.lab=</span><span class="fl">0.2</span>, </span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">cex.circles=</span><span class="fl">0.005</span>, </span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="computing-spatially-constrained-clusters" class="level3">
+<h3 class="anchored" data-anchor-id="computing-spatially-constrained-clusters">10.4 Computing Spatially Constrained Clusters</h3>
+<p>The code chunk below compute the spatially constrained cluster using <a href="https://r-spatial.github.io/spdep/reference/skater.html"><em>skater()</em></a> of <strong>spdep</strong> package. The <em>skater()</em> takes three mandatory arguments: - the first two columns of the MST matrix (i.e.&nbsp;not the cost), - the data matrix (to update the costs as units are being grouped), and - the number of cuts. Note: It is set to <strong>one less than the number of clusters</strong>. So, the value specified is <strong>not</strong> the number of clusters, but the number of cuts in the graph, one less than the number of clusters.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>clust6 <span class="ot">&lt;-</span> spdep<span class="sc">::</span><span class="fu">skater</span>(<span class="at">edges =</span> nigeria.mst[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> df_spatial, </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"euclidean"</span>, </span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ncuts =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We can extract the number of members using the code below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>ccs6 <span class="ot">&lt;-</span> clust6<span class="sc">$</span>groups</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ccs6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>ccs6
+  1   2   3   4   5   6 
+293 178  19 148  59  76 </code></pre>
+</div>
+</div>
+<p>It is observed that there is a decent amount of members in each cluster with lowest being 59.</p>
+<p>Lastly, we can also plot the pruned tree that shows the six clusters on top of the nigeria map.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nigeria_sp, <span class="at">border=</span><span class="fu">gray</span>(.<span class="dv">5</span>))</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(clust6, </span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">coordinates</span>(nigeria_sp), </span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.lab=</span>.<span class="dv">2</span>,</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">groups.colors=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"green"</span>,<span class="st">"blue"</span>, <span class="st">"brown"</span>, <span class="st">"pink"</span>,</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"yellow"</span>),</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">cex.circles=</span><span class="fl">0.005</span>, </span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="visualizing-of-clusters-in-choropleth-map" class="level3">
+<h3 class="anchored" data-anchor-id="visualizing-of-clusters-in-choropleth-map">10.5 Visualizing of Clusters In Choropleth Map</h3>
+<p>As we now have newly derived spatially restrained clusters, we can visualize the clusters on the map by using the code chunks below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>groups_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(clust6<span class="sc">$</span>groups)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>nigeria_sf_spatialcluster <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nigeria_11, <span class="fu">as.factor</span>(groups_mat)) <span class="sc">%&gt;%</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">rename</span>(<span class="st">`</span><span class="at">SP_CLUSTER</span><span class="st">`</span><span class="ot">=</span><span class="st">`</span><span class="at">as.factor.groups_mat.</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(nigeria_sf_spatialcluster, <span class="st">"SP_CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Discussion</strong></p>
+<ul>
+<li><p>Unlike hierarchical clustering with no spatial restraint, skater method delivers organized clustering that respects contiguity of neighbors.</p></li>
+<li><p>Cluster 1 and 2 cover the majority of the map and cluster 3,4,5 and 6 make up the rest.</p></li>
+</ul>
+</section>
+<section id="interpretation-of-spatially-restrained-clusters" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-spatially-restrained-clusters">10.6 Interpretation of Spatially Restrained Clusters</h3>
+<p>Firstly, mean values of cluster variables can be a good indicator of variations between clusters. The code chunk below will be used to get a summary table with mean values.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(df_spatial) <span class="sc">%&gt;%</span> </span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Cluster =</span> nigeria_sf_spatialcluster<span class="sc">$</span>SP_CLUSTER) <span class="sc">%&gt;%</span> </span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Cluster) <span class="sc">%&gt;%</span> </span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(<span class="st">"mean"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Cluster </th>
+   <th style="text-align:right;"> wpt_functional </th>
+   <th style="text-align:right;"> wpt_non.functional </th>
+   <th style="text-align:right;"> Pct_HandPump </th>
+   <th style="text-align:right;"> Pct_Rural </th>
+   <th style="text-align:right;"> Pct_functional </th>
+   <th style="text-align:right;"> Pct_non_functional </th>
+   <th style="text-align:right;"> Pct_UC_2 </th>
+   <th style="text-align:right;"> Pct_Potable </th>
+   <th style="text-align:right;"> Pct_Not_Potable </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> -0.0161468 </td>
+   <td style="text-align:right;"> 0.4701286 </td>
+   <td style="text-align:right;"> 0.3365632 </td>
+   <td style="text-align:right;"> 0.1865996 </td>
+   <td style="text-align:right;"> -0.0783147 </td>
+   <td style="text-align:right;"> 0.3176562 </td>
+   <td style="text-align:right;"> -0.2368948 </td>
+   <td style="text-align:right;"> 0.1861788 </td>
+   <td style="text-align:right;"> -0.0025658 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:right;"> 0.9227470 </td>
+   <td style="text-align:right;"> 0.0055403 </td>
+   <td style="text-align:right;"> 0.9642621 </td>
+   <td style="text-align:right;"> 0.2792070 </td>
+   <td style="text-align:right;"> 1.0637543 </td>
+   <td style="text-align:right;"> -0.5763830 </td>
+   <td style="text-align:right;"> -0.6235108 </td>
+   <td style="text-align:right;"> 0.7320954 </td>
+   <td style="text-align:right;"> -0.3106483 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:right;"> -0.8315384 </td>
+   <td style="text-align:right;"> -1.1207785 </td>
+   <td style="text-align:right;"> -0.6068319 </td>
+   <td style="text-align:right;"> -1.8290009 </td>
+   <td style="text-align:right;"> -2.0588591 </td>
+   <td style="text-align:right;"> -1.7093683 </td>
+   <td style="text-align:right;"> -1.0127278 </td>
+   <td style="text-align:right;"> -2.7297851 </td>
+   <td style="text-align:right;"> -0.9022539 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:right;"> -0.5725469 </td>
+   <td style="text-align:right;"> -0.4513865 </td>
+   <td style="text-align:right;"> -0.9209978 </td>
+   <td style="text-align:right;"> -0.1194801 </td>
+   <td style="text-align:right;"> -0.6034055 </td>
+   <td style="text-align:right;"> 0.1135603 </td>
+   <td style="text-align:right;"> 0.5797276 </td>
+   <td style="text-align:right;"> -0.6661955 </td>
+   <td style="text-align:right;"> 0.2926982 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:right;"> -0.6258608 </td>
+   <td style="text-align:right;"> -0.5511638 </td>
+   <td style="text-align:right;"> -0.9526517 </td>
+   <td style="text-align:right;"> 0.2284166 </td>
+   <td style="text-align:right;"> -0.3116905 </td>
+   <td style="text-align:right;"> 0.9243149 </td>
+   <td style="text-align:right;"> 1.3637043 </td>
+   <td style="text-align:right;"> -0.1738042 </td>
+   <td style="text-align:right;"> 0.9729882 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:right;"> -0.2792691 </td>
+   <td style="text-align:right;"> -0.2236107 </td>
+   <td style="text-align:right;"> -0.8515332 </td>
+   <td style="text-align:right;"> -0.8314089 </td>
+   <td style="text-align:right;"> -0.2306729 </td>
+   <td style="text-align:right;"> -0.3635687 </td>
+   <td style="text-align:right;"> 0.4560961 </td>
+   <td style="text-align:right;"> -0.2817932 </td>
+   <td style="text-align:right;"> -0.3504395 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<p>When there are many cluster variables, it is not easy to distinguish the clusters. Therefore, we will explore other visualization methods to analyze the cluster results.</p>
+<p>Firstly, the cluster column will be appended to data frame by using cbind().</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>cluster_pos <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(nigeria_sf_spatialcluster<span class="sc">$</span>SP_CLUSTER) <span class="sc">%&gt;%</span> <span class="fu">rownames_to_column</span>()</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cluster_pos) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rowname"</span>, <span class="st">"cluster"</span>)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df_spatial,cluster_pos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We will proceed to analyze the distributions of clusters by using box plot from ggplot2 package as shown below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>final_og <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nigeria_11,cluster_pos)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> wpt_functional)) <span class="sc">+</span> </span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> wpt_non.functional)) <span class="sc">+</span> </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_functional)) <span class="sc">+</span> </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_non_functional)) <span class="sc">+</span> </span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-4.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_Potable)) <span class="sc">+</span> </span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-5.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_Not_Potable)) <span class="sc">+</span> </span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-6.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_HandPump)) <span class="sc">+</span> </span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-7.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_Rural)) <span class="sc">+</span> </span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-8.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(final_og, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> Pct_UC_2)) <span class="sc">+</span> </span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cluster))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-66-9.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>There is also another powerful visualization technique using ggRadar(). The code chunk below demonstrates how to produce a radar plot that displays the attributes of clusters. ggRadar() of ggiraphExtra package can be used to perform the task.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggRadar</span>(final, <span class="fu">aes</span>(<span class="at">group =</span> cluster), </span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">rescale =</span> <span class="cn">FALSE</span>, <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">interactive =</span> <span class="cn">FALSE</span>, <span class="at">use.label =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>cluster) <span class="sc">+</span> </span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span> <span class="co"># don't show ticks</span></span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">4.5</span>)) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">rep</span> (<span class="st">"#1c6193"</span>, <span class="fu">nrow</span>(final))) <span class="sc">+</span></span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">rep</span>(<span class="st">"#1c6193"</span>, <span class="fu">nrow</span>(final))) <span class="sc">+</span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cluster Attributes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Interpretation of Clusters</strong></p>
+<ul>
+<li><p>Cluster 1 displays above average attributes in pct_non_functional and wpt_non_functional fields. Given that it is the biggest cluster, more efforts should be directed to repair and upkeep the water points installed in cluster 1.</p></li>
+<li><p>Cluster 2 has high percentage of potable and functional water point as well as high total number of functional water points. Below average Pct_UC_2 indicates that most of the water points can serve only 300 or 500 maximum users at each water point. It is also observed that hand pump is mostly used to transport water in cluster 2 regions.</p></li>
+<li><p>Cluster 3 which belongs to one of the poorest states in Nigeria, Borno, results in lowest attributes in almost all the variables. Having low values in both pct_functional and pct_non_functional indicates that the status of majority of water points in cluster 3 is unknown. Attention is needed to also verify the status and quality of water should be assessed as currently, almost none is potable as observed from the radar chart. Locations of water points are not effective as many of them are not installed in rural areas where potable water is needed.</p></li>
+<li><p>Cluster 4 belongs to the regions with many water points that can serve 1000 people. Nonetheless, many water points are either not functioning or quality of water is not up to standard.</p></li>
+<li><p>Cluster 5 has the highest percentage of water points that have 1000 user capacity. But alarmingly high number of water points are non-functional and non-potable. Most of these are installed in rural areas. Therefore, repair and periodic checks are required to improve cluster 5.</p></li>
+<li><p>Cluster 6 also has above average water points with 1000 maximum users. Not many of them are installed in rural areas which might be due to the fact that cluster 6 regions are slightly more developed compared to other regions.</p></li>
+</ul>
+</section>
+</section>
+<section id="spatially-constrained-clustering-clustgeo-method" class="level2">
+<h2 class="anchored" data-anchor-id="spatially-constrained-clustering-clustgeo-method">11 Spatially Constrained Clustering : ClustGeo Method</h2>
+<p>Before we can performed spatially constrained hierarchical clustering, a spatial distance matrix will be derived by using <a href="https://r-spatial.github.io/sf/reference/geos_measures.html"><code>st_distance()</code></a> of sf package.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(nigeria_1, nigeria_1)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>distmat <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(dist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Next, <code>choicealpha()</code> will be used to determine a suitable value for the mixing parameter alpha as shown in the code chunk below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>cr <span class="ot">&lt;-</span> <span class="fu">choicealpha</span>(proxmat, distmat, <span class="at">range.alpha =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>), <span class="at">K=</span><span class="dv">6</span>, <span class="at">graph =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-69-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-69-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>With reference to the graphs above, alpha = 0.3 will be used as shown in the code chunk below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>clustG <span class="ot">&lt;-</span> <span class="fu">hclustgeo</span>(proxmat, distmat, <span class="at">alpha =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cutree</span>(clustG, <span class="at">k=</span><span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We will then join back the group list with <em>nigeria</em> polygon feature data frame by using the code chunk below.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>nigeria_sf_Gcluster <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nigeria_1, <span class="fu">as.matrix</span>(groups)) <span class="sc">%&gt;%</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">CLUSTER</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">as.matrix.groups.</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="visualisation-of-clusters-in-choropleth-map" class="level3">
+<h3 class="anchored" data-anchor-id="visualisation-of-clusters-in-choropleth-map">11.1 Visualisation of Clusters In Choropleth Map</h3>
+<p>We can now plot the map of the newly delineated spatially constrained clusters.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qtm</span>(nigeria_sf_Gcluster, <span class="st">"CLUSTER"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Discussion</strong></p>
+<ul>
+<li><p>Clusters are more fragmented in ClustGeo method.</p></li>
+<li><p>The results might be due to alpha value of 0.3 which indicates that attribute similarity takes precedence in the cluster analysis.</p></li>
+<li><p>ClustGeo method might be more useful for analysis where it is not required to strictly follow geographical contiguity of cluster members and attribute similarity is more desired.</p></li>
+</ul>
+</section>
+<section id="interpretation-of-spatially-restrained-clusters-1" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-spatially-restrained-clusters-1">11.2 Interpretation of Spatially Restrained Clusters</h3>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>CLUSTER_CG <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(nigeria_sf_Gcluster<span class="sc">$</span>CLUSTER) <span class="sc">%&gt;%</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>()</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CLUSTER_CG) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rowname"</span>,<span class="st">"CLUSTER"</span>)</span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>final_CG <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df_scaled,CLUSTER_CG)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggRadar</span>(final_CG, <span class="fu">aes</span>(<span class="at">group =</span> CLUSTER), </span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">rescale =</span> <span class="cn">FALSE</span>, <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">interactive =</span> <span class="cn">FALSE</span>, <span class="at">use.label =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>CLUSTER) <span class="sc">+</span> </span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span> <span class="co"># don't show ticks</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">4.5</span>)) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">rep</span> (<span class="st">"#1c6193"</span>, <span class="fu">nrow</span>(final_CG))) <span class="sc">+</span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">rep</span>(<span class="st">"#1c6193"</span>, <span class="fu">nrow</span>(final_CG))) <span class="sc">+</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cluster Attributes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Interpretation of Clusters</strong></p>
+<ul>
+<li><p>Cluster 1 which includes Nigeria’s largest city, Lagos, is an all rounder and does not exhibit any pronounced high or low in variables measured.</p></li>
+<li><p>Cluster 2 is low in both functional and non-functional water points percentages. That implies status of water points in those regions is mostly unknown. Considering that Cluster 2 falls in Borno State which is one of the poorest in the nation, it is surprising to see lack of proper water facilities to produce potable water for those in need.</p></li>
+<li><p>Cluster 3 has highest concentration of non-functional water points (%) and non-potable water (%) in the country. Cluster 3 which encompasses more developed regions in the country also has highest percentage of water points that can serve maximum of 1000 users each.</p></li>
+<li><p>Cluster 4 also has high values in non-functional water points (%) and non-potable water (%) which however are not as high as cluster 3. It is observed that hand pump is mostly used for water points in cluster 4.</p></li>
+<li><p>Cluster 5 also has high percentage of non functional water points but water quality in most functional units are perceived to be acceptable.</p></li>
+<li><p>Cluster 6 which covers mostly rural areas has highest percentage of fully functional water points, potable water and water points with hand pump.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">qtm</span>(nigeria_sf_spatialcluster, <span class="st">"SP_CLUSTER"</span>) <span class="sc">+</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_layout</span>(<span class="at">main.title=</span><span class="st">"Skater Method"</span>,</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">main.title.size =</span> <span class="dv">1</span>,</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">main.title.position =</span> <span class="st">"centre"</span>,</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.height=</span><span class="fl">0.25</span>,</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.width=</span><span class="fl">0.35</span>)</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">qtm</span>(nigeria_sf_Gcluster, <span class="st">"CLUSTER"</span>) <span class="sc">+</span></span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title=</span><span class="st">"ClustGeo Method"</span>,</span>
+<span id="cb104-9"><a href="#cb104-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">main.title.size =</span> <span class="dv">1</span>,</span>
+<span id="cb104-10"><a href="#cb104-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">main.title.position =</span> <span class="st">"centre"</span>,</span>
+<span id="cb104-11"><a href="#cb104-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.height=</span><span class="fl">0.25</span>,</span>
+<span id="cb104-12"><a href="#cb104-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">legend.width=</span><span class="fl">0.35</span>)</span>
+<span id="cb104-13"><a href="#cb104-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-14"><a href="#cb104-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(plot1, plot2, <span class="at">asp=</span><span class="dv">1</span>, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take_Home_Ex02_files/figure-html/unnamed-chunk-76-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

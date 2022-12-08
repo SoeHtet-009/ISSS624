@@ -1,0 +1,835 @@
+---
+title: "Regionalisation of Multivariate Water Point Attributes with Non-Spatially Constrained and Spatially Constrained Clustering Methods"
+author: Soe Htet
+execute: 
+  warning: False
+  message: False
+format: html
+editor: visual
+---
+
+## 1 Overview
+
+The process of creating regions is called [regionalisation](https://www.researchgate.net/publication/28153673_Supervised_Regionalization_Methods_A_Survey/link/0fcfd5094046b13d35000000/download). A regionalisation is a special kind of clustering where the objective is to group observations which are similar in their statistical attributes, but also in their spatial location. In this sense, regionalization embeds the same logic as standard clustering techniques, but also applies a series of geographical constraints. Often, these constraints relate to connectivity: two candidates can only be grouped together in the same region if there exists a path from one member to another member that never leaves the region. These paths often model the spatial relationships in the data, such as contiguity or proximity. However, connectivity does not always need to hold for all regions, and in certain contexts it makes sense to relax connectivity or to impose different types of geographic constraints.
+
+## 2 Getting Started
+
+Firstly, we will install libraries below for data wrangling and geospatial analysis purposes.
+
+```{r}
+pacman::p_load(rgdal, spdep, tmap, sf, 
+               ggpubr, cluster, factoextra, NbClust,
+               heatmaply, corrplot, tidyverse,psych,
+               Hmisc,knitr,kableExtra,ClustGeo,ggiraphExtra)
+```
+
+## 3 Importing Geospatial Data
+
+To import a shapefile object, st_read() function of sf package can be used as shown in the code chunk below.
+
+```{r}
+nigeria_1 <- st_read(dsn = "geospatial", 
+                 layer = "geoBoundaries-NGA-ADM2",
+                 crs = 4326)
+nigeria_1
+```
+
+The imported file has WGS 84 coordinate system,774 rows and five columns including multipolygon geometry coordinates.
+
+Shapename column of sf object will be analyzed to check if there are any duplicates.
+
+```{r}
+duplicates <-nigeria_1[duplicated(nigeria_1$shapeName), ]
+duplicates
+```
+
+The above summary reveals that 6 secondary administrative areas appear more than once in the data. However, upon further checking, geometries of duplicate shape names are found to be different. Thus, they will not be deleted to prevent loss of information.
+
+Nevertheless, as duplicated names can pose problems in subsequent analysis, we will rename the names as below.
+
+```{r}
+nigeria_1[95,"shapeName"] <- "Bassa1"
+nigeria_1[305,"shapeName"] <- "Ifelodun1"
+nigeria_1[356,"shapeName"] <- "Irepodun1"
+nigeria_1[520,"shapeName"] <- "Nasarawa1"
+nigeria_1[547,"shapeName"] <- "Obi1"
+nigeria_1[694,"shapeName"] <- "Surulere1"
+```
+
+Now, the code below is added to ensure there is no more duplicate.
+
+```{r}
+duplicates <-nigeria_1[duplicated(nigeria_1$shapeName), ]
+duplicates
+```
+
+## 4 Importing Attribute Data
+
+To import csv fiile, read.csv() function can be utilized. The data has been cleaned beforehand to filter the country to include Nigeria only. Otherwise, filter() function of dplyr can be used to exclude all the other countries.
+
+```{r}
+nigeria_2 <- read.csv("Nigeria_Att.csv")
+```
+
+Tibble dataframe is transformed to sf data table in code chunk below and the following columns are selected for clustering.
+
+Water tech category - system used to transport the water from the source to collection point.
+
+Is_urban - description of water point being at urban or rural area
+
+Usage capacity - Recommended maximum users per water point
+
+Clean_adm2 - names of secondary administrative areas
+
+status_clean - Status of the water point (functional or non-functional)
+
+Subjective quality - Perceived status of water including taste, appearance and odour
+
+```{r}
+nigeria_2 <- st_as_sf(nigeria_2, 
+                       coords = c("lon_deg", "lat_deg"),
+                       crs=4326)
+nigeria_2 <- nigeria_2 %>%
+  select("X.water_tech_category","is_urban","usage_capacity",
+         "clean_adm2","status_clean","X.subjective_quality")
+nigeria_2
+```
+
+## 5 Data Wrangling
+
+Afterwards, describe() function of Hmisc package will be used to explore the selected variables in detail.
+
+```{r}
+describe(nigeria_2$clean_adm2)
+```
+
+Missing values of water tech category column in the data are detected after using describe() function.
+
+```{r}
+describe(nigeria_2$X.water_tech_category)
+```
+
+In the code chunk below, missing values are replaced as unknown.
+
+```{r}
+nigeria_2$X.water_tech_category[nigeria_2$X.water_tech_category==""]="Unknown"
+```
+
+```{r}
+describe(nigeria_2$is_urban)
+```
+
+```{r}
+describe(nigeria_2$usage_capacity)
+```
+
+Status_clean column is also found to have missing values and they are recoded as "Unknown" accordingly.
+
+```{r}
+describe(nigeria_2$status_clean)
+```
+
+```{r}
+nigeria_2$status_clean[nigeria_2$status_clean==""] = "Unknown"
+```
+
+Similarly, subjective quality also has missing information and the same recoding process is performed.
+
+```{r}
+describe(nigeria_2$X.subjective_quality)
+```
+
+```{r}
+nigeria_2$X.subjective_quality[nigeria_2$X.subjective_quality==""] = "Unknown"
+```
+
+### 5.1 Filtering Variables of Interest
+
+Select rows where transport system is hand pump and assign to "HandPump".
+
+```{r}
+HandPump <- nigeria_2 %>%
+  filter(X.water_tech_category == "Hand Pump")
+```
+
+Select rows where water points are located at rural and urban areas.
+
+```{r}
+Rural <- nigeria_2 %>%
+  filter(is_urban == "FALSE")
+Urban <- nigeria_2 %>%
+  filter(is_urban == "TRUE")
+```
+
+Select rows where maximum recommended users is less than 1000 and equal to or more than 1000.
+
+```{r}
+U_Capacity_1 <- nigeria_2 %>%
+  filter(usage_capacity < 1000)
+
+U_Capacity_2 <- nigeria_2 %>%
+  filter(usage_capacity >= 1000)
+```
+
+Select rows where water points are inspected to be functional or non-functional.
+
+```{r}
+functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Functional",
+                             "Functional but needs repair",
+                             "Functional but not in use"))
+
+Non_functional <- nigeria_2 %>%
+  filter(status_clean %in% c("Non-Functional",
+                             "Non-Functional due to dry season",
+                             "Non functional but not in use",
+                             "Abandoned/Decommissioned",
+                             "Abandoned"))
+
+Unknown <- nigeria_2 %>%
+  filter(status_clean == "Unknown")
+```
+
+Select rows where quality of water is drinkable or not suitable to drink.
+
+```{r}
+Potable <- nigeria_2 %>%
+  filter(X.subjective_quality %in% c("Acceptable quality",
+                                     "Within National limits (Potable)",
+                                     "Within National standards (Potable)"))
+Not_Potable <- nigeria_2 %>%
+  filter(X.subjective_quality %in% c("No because of Colour",
+                                     "No because of Odour",
+                                     "No because of Taste"))
+```
+
+## 6 Performing Point In Polygon Count
+
+The following code chunk is used to calculate how many counts of variables calculated are present in each polygon. st_intersect() method is used to perform the calculation.
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`total_wpt` = lengths(
+    st_intersects(nigeria_1, nigeria_2))) %>%
+  mutate(`HandPump` = lengths(
+    st_intersects(nigeria_1, HandPump))) 
+```
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`Rural` = lengths(
+    st_intersects(nigeria_1, Rural))) %>%
+  mutate(`Urban` = lengths(
+    st_intersects(nigeria_1, Urban))) 
+```
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`wpt_functional` = lengths(
+    st_intersects(nigeria_1, functional))) %>%
+  mutate(`wpt_non-functional` = lengths(
+    st_intersects(nigeria_1, Non_functional)))
+```
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`U_Capacity_1` = lengths(
+    st_intersects(nigeria_1, U_Capacity_1))) %>%
+  mutate(`U_Capacity_2` = lengths(
+    st_intersects(nigeria_1, U_Capacity_2)))
+```
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(`Potable` = lengths(
+    st_intersects(nigeria_1, Potable))) %>%
+  mutate(`Not_Potable` = lengths(
+    st_intersects(nigeria_1, Not_Potable)))
+```
+
+After the counts in polygon are done, we will proceed to compute the percentage figures in the code chunk below.
+
+```{r}
+nigeria_1 <- nigeria_1 %>% 
+  mutate(Pct_HandPump = (HandPump/total_wpt)*100) %>%
+  mutate(Pct_Rural = (Rural/total_wpt)*100) %>%
+  mutate(Pct_functional = (wpt_functional/total_wpt)*100) %>%
+  mutate(Pct_non_functional = (`wpt_non-functional`/total_wpt)*100) %>%
+  mutate(Pct_UC_1 = (U_Capacity_1/total_wpt)*100) %>%
+  mutate(Pct_UC_2 = (U_Capacity_2/total_wpt)*100) %>%
+  mutate(Pct_Potable = (Potable/total_wpt)*100) %>%
+  mutate(Pct_Not_Potable = (Not_Potable/total_wpt)*100)
+```
+
+As the denominator for calculations is total_wpt (total water point), for some areas that do not have any water point (i.e the denominator is 0), the calculation will give rise to NaN value. To fix this issue, we will assign value 0 to percentage columns.
+
+```{r}
+nigeria_1[nigeria_1$total_wpt==0,c(17:24)] <- 0
+```
+
+## 7 Saving Analytical Data
+
+The final clean data is saved as .rds file.
+
+```{r}
+write_rds(nigeria_1, "nigeria_1.rds")
+```
+
+## 8 Exploratory Data Analysis
+
+To understand more about the data fields that we have just derived, the distributions of these fields are plotted by using ggplot2 package.
+
+```{r}
+nigeria_1 <- read_rds("nigeria_1.rds")
+g.hp <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_HandPump`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+g.rural <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_Rural`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+g.functional <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_functional`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+g.nonfunctional <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_non_functional`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+UC1 <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_UC_1`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+UC2 <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_UC_2`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+ggarrange(g.hp,g.rural,g.functional,g.nonfunctional,
+          UC1,UC2,nrow=3,ncol=2)
+
+```
+
+**Observations from distribution plos**
+
+-   As expected, the water points installed as mostly in rural areas where potable drinking water is not easily accessible.
+
+-   Average percentage of functional water points is only close to 50%. That is alarming as it means half of water points installed in Nigeria might not be functioning properly.
+
+-   Majority of water points can only serve less than 1000 people per point.
+
+```{r}
+total_functional <- ggplot(data=nigeria_1, 
+       aes(x=`wpt_functional`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+total_nonfunctional <- ggplot(data=nigeria_1, 
+       aes(x=`wpt_non-functional`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+g.potable <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_Potable`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+g.n_potable <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_Not_Potable`)) +
+      geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue")
+
+ggarrange(total_functional,total_nonfunctional,
+          g.potable,g.n_potable,nrow=2,ncol=2)
+```
+
+**Observations from distribution plots**
+
+-   Distributions of both functional and non-functional water points are right skewed.
+
+-   Majority of the water points inspected are perceived to have potable water.
+
+```{r}
+p1 <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_functional`)) +
+  geom_boxplot(color="black", 
+               fill="light blue")
+
+p2 <- ggplot(data=nigeria_1, 
+       aes(x=`Pct_non_functional`)) +
+  geom_boxplot(color="black", 
+               fill="light blue")
+
+ggarrange(p1,p2,nrow=1,ncol=2)
+```
+
+**Observations from boxplots**
+
+-   As mentioned, only half of total water points are functional. It is evident to see in the boxplot of Pct_functional.
+
+### 8.1 Correlations Between Cluster Variables
+
+The data is converted to data frame object as cor() function can only work with data frame object.
+
+```{r}
+nigeria <- data.frame(nigeria_1)
+```
+
+The code chunk below produces a plot that shows correlations between cluster variables.
+
+```{r}
+cluster_vars.cor = cor(nigeria[,c(11,12,17:24)])
+corrplot.mixed(cluster_vars.cor,
+         lower = "ellipse", 
+               upper = "number",
+               tl.pos = "lt",
+               diag = "l",
+               tl.col = "black",
+         number.cex = .7,tl.cex=0.8)
+```
+
+Pct_UC_1 is heavily correlated with Pct_UC_2 and Pct_HandPump. Therefore, it will be dropped from cluster variable list to avoid multicollinearity.
+
+```{r}
+cluster.vars <- nigeria %>%
+  select(c(1,11,12,17:20,22:24))
+head(cluster.vars)
+```
+
+```{r}
+row.names(cluster.vars) <- cluster.vars$shapeName
+df <- cluster.vars %>%
+  select(c(2:10))
+head(df)
+```
+
+### 8.2 Standardization of Cluster Variables
+
+Cluster variables that have been selected are of different types. For example, wpt_functional represents total number of functional water points in the polygon region while Pct_HandPump represents percentage value of water points with hand pump specifically in the region. Therefore, it is wise to standardize the cluster variables to ensure equal importance is placed on each variable.
+
+```{r}
+df_scaled <- scale(df)
+```
+
+## 9 Hierarchical Clustering
+
+### 9.1 Computing Proximity Matrix
+
+Proximity matrix is computed using euclidean distance. The method of distance calculation can be modified in input fields of dist() function.
+
+```{r}
+proxmat <- dist(df_scaled, method = 'euclidean')
+```
+
+Afterwards, ward algorithm is used to perform hierarchical clustering.
+
+```{r}
+hclust_ward <- hclust(proxmat, method = 'ward.D')
+```
+
+```{r}
+plot(hclust_ward, cex = 0.1)
+```
+
+### 9.2 Selecting Optimal Clustering Algorithm
+
+There are various algorithms that can be used in hierarchical clustering. Therefore, it might be sometimes confusing to choose which algorithm to employ. We can tackle this dilemma by using agnes() function. The output gives the level of homogeneity for each algorithm and higher value in the output corresponds to better homogeneity within the cluster.
+
+```{r}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+ac <- function(x) {
+  agnes(df_scaled, method = x)$ac
+}
+
+map_dbl(m, ac)
+```
+
+From the results, ward algorithm gives highest score of homogeneity. Therefore, it will be used for subsequent cluster analysis.
+
+### 9.3 Determining Optimal Cluster Numbers
+
+#### 9.3.1 Elbow Method
+
+There are multiple methods to determine optimal cluster numbers. One of the most popular method is elbow method. fviz_nbclust() of factoextra package allows us to produce elbow method plot as shown below.
+
+```{r}
+set.seed(123)
+fviz_nbclust(df_scaled, hcut, method = "wss", k.max = 10) + theme_minimal() + ggtitle("the Elbow Method")
+```
+
+There is no clear visible bend in the elbow plot. Therefore, it is ambiguous to decide the optimal number of clusters.
+
+#### 9.3.2 Gap Statistics
+
+Gap statistics is a more sophisticated method to determine optimal number of clusters. fviz_nbclust() function of factoextra package can also be used by passing method argument as "gap_start". The estimation of optimal clusters will be value that maximizes the gap statistics.
+
+```{r}
+set.seed(123)
+fviz_nbclust(df_scaled, hcut, nstart = 25,  method = "gap_stat", nboot = 500)+
+  labs(subtitle = "Gap statistic method")
+```
+
+Gap Statistics plot indicates that the optimal number of clusters is 10.
+
+#### 9.3.3 Average Silhouette
+
+Another visualization that can help determine optimal clusters is called average silhouette method. It computes the average silhouette of observations for different values of k. The optimal number of clusters k is the one that maximizes the value of average silhouette over a range of possible values of k.
+
+```{r}
+fviz_nbclust(df_scaled, hcut, method = "silhouette", k.max = 10) + theme_minimal() + ggtitle("The Silhouette Plot")
+```
+
+**Discussion**
+
+-   Elbow method does not provide a conclusive result and the plot result is ambiguous.
+
+-   Gap statistics method proposes 10 as optimal number of clusters. However, it should be noted that 10 clusters for small data set might cause some clusters to have only one or two members.
+
+-   Average silhouette method proposes 2 optimal number of clusters. 6 clusters is second most optimal.
+
+-   From the summary, it can be observed that no two different methods provide same conclusive results. For this study, we will choose 6 clusters as it can give proper differentiation between clusters while keeping a decent number of members in each cluster.
+
+### 9.4 Mapping The Clusters Formed
+
+```{r}
+groups <- as.factor(cutree(hclust_ward, k=6))
+```
+
+```{r}
+nigeria_cluster <- cbind(nigeria_1, as.matrix(groups)) %>%
+  rename(`CLUSTER`=`as.matrix.groups.`)
+```
+
+```{r}
+qtm(nigeria_cluster, "CLUSTER")
+```
+
+**Discussion**
+
+-   As hierarchical clustering does not consider spatial similarity, it is clear to see the clusters fragmented across the map.
+
+-   For development policy or marketing or political campaigns, it is desirable that contiguous regions belong to the same clusters to enable an efficient and targeted approach. Therefore, the cluster analysis should be carried out by taking into account both attribute similarity and spatial similarity.
+
+## 10 Spatially Constrained Clustering - SKATER Method
+
+In this section, we will perform spatially constrained clustering using Skater method. Skater method utilizes minimum spanning tree algorithm from neighbors that are sharing borders to each other. The term "minimum spanning" comes from minimizing the cost (i.e dissimilarity between neighbors) when connecting to form a tree.
+
+### 10.1 Queen Contiguity
+
+Since Skater method is based on minimum spanning tree algorithm that relies on contiguous neighbors, row 86 of geospatial data (the region with no neighbor) will be removed from the data.
+
+```{r}
+nigeria_11 <- nigeria_1[-86,]
+```
+
+The sf object will be converted to spatial polygons object to be able to work with skater method.
+
+```{r}
+nigeria_sp <- as_Spatial(nigeria_11)
+```
+
+The code chunk below computes contiguity neighbors by queen method using poly2nb() of spdep package.
+
+```{r}
+nigeria_nb <- poly2nb(nigeria_sp)
+nigeria_nb
+```
+
+### 10.2 Computation of Spatial Weight Matrix
+
+As region 86 was removed due to lack of neighbor, the same region from aspatial data should be removed to keep same number of rows.
+
+```{r}
+df_spatial <- df_scaled[-86,]
+```
+
+Edge costs (pairwise dissimilarity between the neighbors) can be computed in the code chunk below using nbcosts() function of spdep package.
+
+```{r}
+lcosts <- nbcosts(nigeria_nb, df_spatial)
+```
+
+Next, we **convert the neighbour list to a list weights object** by specifying the just computed **lcosts** as the weights.
+
+We will use **nb2listw() function of spdep package** to achieve this and we specify the **style as B** to make sure the cost values are not row-standardised.
+
+```{r}
+nigeria.wm <- nb2listw(nigeria_nb, 
+                   lcosts, 
+                   style="B")
+summary(nigeria.wm)
+```
+
+### 10.3 Computing Minimum Spanning Tree
+
+Minimum spanning tree algorithm is performed using mstree() function of spdep package.
+
+```{r}
+nigeria.mst <- mstree(nigeria.wm)
+```
+
+```{r}
+class(nigeria.mst)
+```
+
+```{r}
+head(nigeria.mst)
+```
+
+The final minimum spanning tree structure is displayed.
+
+```{r}
+plot(nigeria_sp, border=gray(.5))
+plot.mst(nigeria.mst, 
+         coordinates(nigeria_sp), 
+         col="blue", 
+         cex.lab=0.2, 
+         cex.circles=0.005, 
+         add=TRUE)
+```
+
+### 10.4 Computing Spatially Constrained Clusters
+
+The code chunk below compute the spatially constrained cluster using [*skater()*](https://r-spatial.github.io/spdep/reference/skater.html) of **spdep** package. The *skater()* takes three mandatory arguments: - the first two columns of the MST matrix (i.e. not the cost), - the data matrix (to update the costs as units are being grouped), and - the number of cuts. Note: It is set to **one less than the number of clusters**. So, the value specified is **not** the number of clusters, but the number of cuts in the graph, one less than the number of clusters.
+
+```{r}
+clust6 <- spdep::skater(edges = nigeria.mst[,1:2], 
+                 data = df_spatial, 
+                 method = "euclidean", 
+                 ncuts = 5)
+```
+
+We can extract the number of members using the code below.
+
+```{r}
+ccs6 <- clust6$groups
+table(ccs6)
+```
+
+It is observed that there is a decent amount of members in each cluster with lowest being 59.
+
+Lastly, we can also plot the pruned tree that shows the six clusters on top of the nigeria map.
+
+```{r}
+plot(nigeria_sp, border=gray(.5))
+plot(clust6, 
+     coordinates(nigeria_sp), 
+     cex.lab=.2,
+     groups.colors=c("red","green","blue", "brown", "pink",
+                     "yellow"),
+     cex.circles=0.005, 
+     add=TRUE)
+```
+
+### 10.5 Visualizing of Clusters In Choropleth Map
+
+As we now have newly derived spatially restrained clusters, we can visualize the clusters on the map by using the code chunks below.
+
+```{r}
+groups_mat <- as.matrix(clust6$groups)
+```
+
+```{r}
+nigeria_sf_spatialcluster <- cbind(nigeria_11, as.factor(groups_mat)) %>%
+                          rename(`SP_CLUSTER`=`as.factor.groups_mat.`)
+```
+
+```{r}
+qtm(nigeria_sf_spatialcluster, "SP_CLUSTER")
+```
+
+**Discussion**
+
+-   Unlike hierarchical clustering with no spatial restraint, skater method delivers organized clustering that respects contiguity of neighbors.
+
+-   Cluster 1 and 2 cover the majority of the map and cluster 3,4,5 and 6 make up the rest.
+
+### 10.6 Interpretation of Spatially Restrained Clusters
+
+Firstly, mean values of cluster variables can be a good indicator of variations between clusters. The code chunk below will be used to get a summary table with mean values.
+
+```{r}
+as.data.frame(df_spatial) %>% 
+  mutate(Cluster = nigeria_sf_spatialcluster$SP_CLUSTER) %>% 
+  group_by(Cluster) %>% 
+  summarise_all("mean") %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+When there are many cluster variables, it is not easy to distinguish the clusters. Therefore, we will explore other visualization methods to analyze the cluster results.
+
+Firstly, the cluster column will be appended to data frame by using cbind().
+
+```{r}
+cluster_pos <- as.data.frame(nigeria_sf_spatialcluster$SP_CLUSTER) %>% rownames_to_column()
+colnames(cluster_pos) <- c("rowname", "cluster")
+
+final <- cbind(df_spatial,cluster_pos)
+```
+
+We will proceed to analyze the distributions of clusters by using box plot from ggplot2 package as shown below.
+
+```{r}
+final_og <- cbind(nigeria_11,cluster_pos)
+ggplot(final_og, aes(x = cluster, y = wpt_functional)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = wpt_non.functional)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_functional)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_non_functional)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_Potable)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_Not_Potable)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_HandPump)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_Rural)) + 
+        geom_boxplot(aes(fill = cluster))
+ggplot(final_og, aes(x = cluster, y = Pct_UC_2)) + 
+        geom_boxplot(aes(fill = cluster))
+```
+
+There is also another powerful visualization technique using ggRadar(). The code chunk below demonstrates how to produce a radar plot that displays the attributes of clusters. ggRadar() of ggiraphExtra package can be used to perform the task.
+
+```{r}
+ggRadar(final, aes(group = cluster), 
+        rescale = FALSE, legend.position = "none", size = 1, interactive = FALSE, use.label = TRUE) + 
+  facet_wrap(~cluster) + 
+  scale_y_discrete(breaks = NULL) + # don't show ticks
+  theme(axis.text.x = element_text(size = 4.5)) + scale_fill_manual(values = rep ("#1c6193", nrow(final))) +
+  scale_color_manual(values = rep("#1c6193", nrow(final))) +
+  ggtitle("Cluster Attributes")
+```
+
+**Interpretation of Clusters**
+
+-   Cluster 1 displays above average attributes in pct_non_functional and wpt_non_functional fields. Given that it is the biggest cluster, more efforts should be directed to repair and upkeep the water points installed in cluster 1.
+
+-   Cluster 2 has high percentage of potable and functional water point as well as high total number of functional water points. Below average Pct_UC_2 indicates that most of the water points can serve only 300 or 500 maximum users at each water point. It is also observed that hand pump is mostly used to transport water in cluster 2 regions.
+
+-   Cluster 3 which belongs to one of the poorest states in Nigeria, Borno, results in lowest attributes in almost all the variables. Having low values in both pct_functional and pct_non_functional indicates that the status of majority of water points in cluster 3 is unknown. Attention is needed to also verify the status and quality of water should be assessed as currently, almost none is potable as observed from the radar chart. Locations of water points are not effective as many of them are not installed in rural areas where potable water is needed.
+
+-   Cluster 4 belongs to the regions with many water points that can serve 1000 people. Nonetheless, many water points are either not functioning or quality of water is not up to standard.
+
+-   Cluster 5 has the highest percentage of water points that have 1000 user capacity. But alarmingly high number of water points are non-functional and non-potable. Most of these are installed in rural areas. Therefore, repair and periodic checks are required to improve cluster 5.
+
+-   Cluster 6 also has above average water points with 1000 maximum users. Not many of them are installed in rural areas which might be due to the fact that cluster 6 regions are slightly more developed compared to other regions.
+
+## 11 Spatially Constrained Clustering : ClustGeo Method
+
+Before we can performed spatially constrained hierarchical clustering, a spatial distance matrix will be derived by using [`st_distance()`](https://r-spatial.github.io/sf/reference/geos_measures.html) of sf package.
+
+```{r}
+dist <- st_distance(nigeria_1, nigeria_1)
+distmat <- as.dist(dist)
+```
+
+Next, `choicealpha()` will be used to determine a suitable value for the mixing parameter alpha as shown in the code chunk below.
+
+```{r}
+cr <- choicealpha(proxmat, distmat, range.alpha = seq(0, 1, 0.1), K=6, graph = TRUE)
+```
+
+With reference to the graphs above, alpha = 0.3 will be used as shown in the code chunk below.
+
+```{r}
+clustG <- hclustgeo(proxmat, distmat, alpha = 0.3)
+```
+
+```{r}
+groups <- as.factor(cutree(clustG, k=6))
+```
+
+We will then join back the group list with *nigeria* polygon feature data frame by using the code chunk below.
+
+```{R}
+nigeria_sf_Gcluster <- cbind(nigeria_1, as.matrix(groups)) %>%
+  rename(`CLUSTER` = `as.matrix.groups.`)
+```
+
+### 11.1 Visualisation of Clusters In Choropleth Map
+
+We can now plot the map of the newly delineated spatially constrained clusters.
+
+```{r}
+qtm(nigeria_sf_Gcluster, "CLUSTER")
+```
+
+**Discussion**
+
+-   Clusters are more fragmented in ClustGeo method.
+
+-   The results might be due to alpha value of 0.3 which indicates that attribute similarity takes precedence in the cluster analysis.
+
+-   ClustGeo method might be more useful for analysis where it is not required to strictly follow geographical contiguity of cluster members and attribute similarity is more desired.
+
+### 11.2 Interpretation of Spatially Restrained Clusters
+
+```{r}
+CLUSTER_CG <- as.data.frame(nigeria_sf_Gcluster$CLUSTER) %>%
+  rownames_to_column()
+colnames(CLUSTER_CG) <- c("rowname","CLUSTER")
+final_CG <- cbind(df_scaled,CLUSTER_CG)
+```
+
+```{r}
+ggRadar(final_CG, aes(group = CLUSTER), 
+        rescale = FALSE, legend.position = "none", size = 1, interactive = FALSE, use.label = TRUE) + 
+  facet_wrap(~CLUSTER) + 
+  scale_y_discrete(breaks = NULL) + # don't show ticks
+  theme(axis.text.x = element_text(size = 4.5)) + scale_fill_manual(values = rep ("#1c6193", nrow(final_CG))) +
+  scale_color_manual(values = rep("#1c6193", nrow(final_CG))) +
+  ggtitle("Cluster Attributes")
+```
+
+**Interpretation of Clusters**
+
+-   Cluster 1 which includes Nigeria's largest city, Lagos, is an all rounder and does not exhibit any pronounced high or low in variables measured.
+
+-   Cluster 2 is low in both functional and non-functional water points percentages. That implies status of water points in those regions is mostly unknown. Considering that Cluster 2 falls in Borno State which is one of the poorest in the nation, it is surprising to see lack of proper water facilities to produce potable water for those in need.
+
+-   Cluster 3 has highest concentration of non-functional water points (%) and non-potable water (%) in the country. Cluster 3 which encompasses more developed regions in the country also has highest percentage of water points that can serve maximum of 1000 users each.
+
+-   Cluster 4 also has high values in non-functional water points (%) and non-potable water (%) which however are not as high as cluster 3. It is observed that hand pump is mostly used for water points in cluster 4.
+
+-   Cluster 5 also has high percentage of non functional water points but water quality in most functional units are perceived to be acceptable.
+
+-   Cluster 6 which covers mostly rural areas has highest percentage of fully functional water points, potable water and water points with hand pump.
+
+```{r}
+plot1 <- qtm(nigeria_sf_spatialcluster, "SP_CLUSTER") +
+tm_layout(main.title="Skater Method",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+plot2 <- qtm(nigeria_sf_Gcluster, "CLUSTER") +
+  tm_layout(main.title="ClustGeo Method",
+                           main.title.size = 1,
+                           main.title.position = "centre",
+                 legend.height=0.25,
+                 legend.width=0.35)
+
+tmap_arrange(plot1, plot2, asp=1, ncol=2)
+```
