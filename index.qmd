@@ -1,7 +1,7 @@
 ---
-title: "ISSS624"
+title: "ISSS624 Applied Geospatial Analytics"
 ---
 
 ![](images/dcf8c080-81a8-11ea-9cdb-0ba836f18a58.jpg){fig-align="center" width="800"}
 
-Hello everyone, I will share with you my learning journey of geospatial analytics in this blog.
+Hi everyone, I will share my learning journey of geospatial analytics with you in this website. Hope you find the exercises useful!
